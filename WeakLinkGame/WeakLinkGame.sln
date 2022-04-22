@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeakLinkGame.API", "WeakLinkGame.API\WeakLinkGame.API.csproj", "{841914AA-CDBD-41EA-975B-2D757EB9093A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeakLinkGame.DataAccessLayer", "WeakLinkGame.DataAccessLayer\WeakLinkGame.DataAccessLayer.csproj", "{68A1E108-E1A7-4C53-8FC0-F5A604709F32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeakLinkGame.DataContracts", "WeakLinkGame.DataContracts\WeakLinkGame.DataContracts.csproj", "{87F07F7E-9B09-4202-BDD1-AB2BD6CB1F3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{2075853B-480C-4B93-94B9-3E55A2FCCF47}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{841914AA-CDBD-41EA-975B-2D757EB9093A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{841914AA-CDBD-41EA-975B-2D757EB9093A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{841914AA-CDBD-41EA-975B-2D757EB9093A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{841914AA-CDBD-41EA-975B-2D757EB9093A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68A1E108-E1A7-4C53-8FC0-F5A604709F32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68A1E108-E1A7-4C53-8FC0-F5A604709F32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68A1E108-E1A7-4C53-8FC0-F5A604709F32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68A1E108-E1A7-4C53-8FC0-F5A604709F32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F07F7E-9B09-4202-BDD1-AB2BD6CB1F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F07F7E-9B09-4202-BDD1-AB2BD6CB1F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F07F7E-9B09-4202-BDD1-AB2BD6CB1F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F07F7E-9B09-4202-BDD1-AB2BD6CB1F3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2075853B-480C-4B93-94B9-3E55A2FCCF47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2075853B-480C-4B93-94B9-3E55A2FCCF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2075853B-480C-4B93-94B9-3E55A2FCCF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2075853B-480C-4B93-94B9-3E55A2FCCF47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
