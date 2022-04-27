@@ -4,7 +4,11 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 import type { HubConnection } from '@microsoft/signalr';
 import { useEffect, useRef } from 'react';
 
-const HUB_URL = '/game';
+const HUB_URL = 'https://localhost:7089/game';
+
+const methods = [
+  'PrepareSession',
+]
 
 export default () => {
   const connection = useRef<HubConnection>(null);
@@ -15,7 +19,9 @@ export default () => {
       .withAutomaticReconnect()
       .build();
 
-    connection.current.on('RecieveMessage', message => setLastIncoming(message));
+    for (const method of methods) {
+      connection.current.on(method, message => setLastIncoming(message));
+    }
 
     connection.current.start()
       .then(() => {
@@ -27,17 +33,18 @@ export default () => {
       });
   }, []);
 
-  const [message, setMessage] = useState<string>('');
+  const [method, setMethod] = useState<string>('');
+  const [param, setParam] = useState<string>('');
   const [response, setResponse] = useState<string>('');
   const [lastIncoming, setLastIncoming] = useState<string>('[Not connected]');
   const responseElementRef = useRef();
 
   const send = async () => {
-    if (!message || !connection.current) {
+    if (!method || !connection.current) {
       return;
     }
 
-    const response = await connection.current.send('SendMessage', message).catch(e => {
+    const response = await connection.current.send(method, param).catch(e => {
       setLastIncoming(String(e));
       console.error(e);
     });
@@ -55,7 +62,8 @@ export default () => {
     <pre> {lastIncoming} </pre>
 
     <br/>
-    <input type="text" onChange={ e => setMessage(e.target.value) }/>
+    <input type="text" onChange={ e => setMethod(e.target.value) }/>
+    <input type="text" onChange={ e => setParam(e.target.value) }/>
     <button onClick={send}>Send</button>
 
     <h3>Response</h3>
