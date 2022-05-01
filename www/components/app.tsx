@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { HUB_URL } from '../lib/api';
 import { useConnection, setConnection } from '../lib/connection';
 import { gameState as gameStateStore } from '../lib/store/gameState';
-import { role as roleStore } from '../lib/store/auth';
+import { role as roleStore, authentication as authenticationStore, authenticate } from '../lib/store/auth';
 import { GameState, Role } from '../lib/constants';
 import AuthenticationForm from './AuthenticationForm';
 import { useStore } from 'effector-react';
@@ -17,6 +17,7 @@ export default () => {
 
   const gameState = useStore(gameStateStore);
   const role = useStore(roleStore);
+  const authentication = useStore(authenticationStore);
 
   useEffect(() => {
     if (connection) {
@@ -39,7 +40,7 @@ export default () => {
 
   switch (gameState) {
     case GameState.Unauthorized:
-      return <AuthenticationForm/>
+      return <AuthenticationForm {...{role, authentication, authenticate}} />
     case GameState.Unstarted:
       return role === Role.Admin ? <GameSetup/> : <SplashScreen/>;
 

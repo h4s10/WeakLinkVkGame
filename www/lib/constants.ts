@@ -6,8 +6,8 @@ export enum GameState {
 }
 
 export enum Role {
-  Admin = 'admin',
-  Player = 'player'
+  Admin = 'Admin',
+  Player = 'Player'
 }
 
 export enum Authentication {

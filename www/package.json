@@ -6,13 +6,15 @@
   "main": "index.js",
   "scripts": {
     "build": "esbuild dist/index.tsx --sourcemap --bundle --target=chrome99 --outfile=dist/bundle/index.js",
-    "start": "esbuild dist/index.tsx --sourcemap --bundle --target=chrome99 --outfile=dist/bundle/index.js --servedir=dist"
+    "start": "esbuild dist/index.tsx --sourcemap --bundle --target=chrome99 --outfile=dist/bundle/index.js --servedir=dist",
+    "stories": "ladle serve --stories components/stories/*"
   },
   "author": "VK",
   "devDependencies": {
     "esbuild": "0.14.38"
   },
   "dependencies": {
+    "@ladle/react": "^0.14.1",
     "@microsoft/signalr": "^6.0.4",
     "effector": "^22.3.0",
     "effector-react": "^22.0.6",
