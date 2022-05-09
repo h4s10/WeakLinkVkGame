@@ -1,0 +1,11 @@
+body {
+  font-family: "VK Sans Display", sans-serif;
+}
+
+@font-face {
+  font-family: 'VK Sans Display';
+  font-display: swap;
+  font-weight: 500;
+  src: url(assets/fonts/VK_Sans_Display_Medium.woff2) format('woff2'),
+  url(assets/fonts/VK_Sans_Display_Medium.woff) format('woff');
+}

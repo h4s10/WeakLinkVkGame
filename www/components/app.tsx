@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import './global.css';
 import { HUB_URL } from '../lib/api';
 import { useConnection, setConnection } from '../lib/connection';
 import { gameState as gameStateStore } from '../lib/store/gameState';
@@ -9,7 +10,7 @@ import AuthenticationForm from './AuthenticationForm';
 import { useStore } from 'effector-react';
 import { HubConnectionState } from '@microsoft/signalr';
 import GameSetup from './GameSetup';
-import SplashScreen from './SplashScreen';
+import SplashScreen from './splash/SplashScreen';
 
 export default () => {
   const connection = useConnection(HUB_URL);
@@ -27,15 +28,15 @@ export default () => {
   }, [connection]);
 
   if (!connection) {
-    return null;
+    return <SplashScreen/>;
   }
 
   if (connectionError) {
-    return <pre>{connectionError.toString()}</pre>;
+    return <SplashScreen caption="ошибка" content={ <div style={{ fontFamily: 'monospace' }}>{connectionError.toString()}</div> }/>
   }
 
   if (connection.state !== HubConnectionState.Connected) {
-    return <h2>{connection.state}</h2>
+    return <SplashScreen content={ <h2>{connection.state}</h2> }/>;
   }
 
   switch (gameState) {
@@ -48,8 +49,6 @@ export default () => {
     //   assertNever(gameState);
   }
 
-  return <>
-    <h1>Вы самое слабое звено!</h1>
-  </>;
+  return <SplashScreen/>;
 }
 

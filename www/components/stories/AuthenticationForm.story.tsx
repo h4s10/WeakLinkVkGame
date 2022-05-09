@@ -9,7 +9,7 @@ const mockAuthentication = (role, succeedOnSubmit) => {
   return succeedOnSubmit ? Promise.resolve() : Promise.reject();
 }
 
-export const Controls: Story<{
+export const AuthenticationFormConfigurable: Story<{
   defaultRole: string[],
   currentAuthentication: string[],
   succeedOnSubmit: boolean
@@ -19,10 +19,10 @@ export const Controls: Story<{
   succeedOnSubmit,
 }) => <AuthenticationForm authentication={currentAuthentication} role={defaultRole} authenticate={(role) => mockAuthentication(role, succeedOnSubmit)}/>;
 
-Controls.args = {
+AuthenticationFormConfigurable.args = {
   succeedOnSubmit: true,
 }
-Controls.argTypes = {
+AuthenticationFormConfigurable.argTypes = {
   defaultRole: {
     options: [Role.Admin, Role.Player],
     control: { type: "radio" },
