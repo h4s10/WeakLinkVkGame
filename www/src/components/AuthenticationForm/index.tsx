@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 
 import { Authentication, Role } from '../../lib/constants';
 import Page from '../Page';
-import './authenticationForm.css';
 import Button from '../Button';
 import Throbber from '../Throbber';
 
@@ -12,7 +11,6 @@ export default (
     authenticate,
   }:
     {
-      role?: Role,
       authentication: Authentication,
       authenticate: (role) => void,
     }) => {
@@ -25,9 +23,9 @@ export default (
 
   return <Page>
     <h1 className="text-h4 mb-2">Авторизация</h1>
-    <div className="flex w-full gap-2 my-auto align-middle rounded bg-white p-10">
+    <div className="flex w-full gap-2 my-auto align-middle items-center rounded bg-white place-content-evenly p-10 min-h-[32rem]">
       {
-        (authentication === Authentication.Pending) && <Throbber/>
+        (authentication === Authentication.Pending) && <div className="h-20"><Throbber/></div>
       }
       {
         authentication === Authentication.None && <>
