@@ -1,5 +1,5 @@
-import React, { MouseEventHandler, useCallback } from 'react';
-import type { FunctionComponent } from 'react';
+import React, { useCallback } from 'react';
+import type { FunctionComponent, MouseEventHandler } from 'react';
 import './button.css';
 import { AnswerColor } from '../../lib/constants';
 

@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 
-import { Authentication, Role } from '../lib/constants';
+import { Authentication, Role } from '../../lib/constants';
+import Page from '../Page';
 
 export default (
   {
@@ -29,12 +30,12 @@ export default (
     return <b>Authenticating...</b>;
   }
 
-  return <>
+  return <Page>
     <h1>Авторизация</h1>
     <select id="role" ref={roleRef} defaultValue={role}>
       <option value={Role.Admin}>Admin</option>
       <option value={Role.Player}>Player</option>
     </select>
     <button onClick={submit}>Authenticate</button>
-  </>
+  </Page>
 }
