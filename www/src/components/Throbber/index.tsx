@@ -6,7 +6,7 @@ import SmileyIncorrect from '../../../assets/smileyIncorrect.svg';
 import SmileyBank from '../../../assets/smileyBank.svg';
 
 export default () => <div className='Throbber'>
-  <SmileyCorrect className='Throbber_a'/>
-  <SmileyIncorrect className='Throbber_b'/>
-  <SmileyBank className='Throbber_c'/>
+  <SmileyCorrect/>
+  <SmileyIncorrect/>
+  <SmileyBank/>
 </div>

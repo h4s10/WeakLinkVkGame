@@ -18,6 +18,8 @@ body {
   --correct-color: #27AE60;
   --neutral-answer-color: #F2C94C;
 
+  --score-color: #00EAFF;
+
   --inactive-tab-color: #4F4F4F;
   --active-tab-color: white;
 }
