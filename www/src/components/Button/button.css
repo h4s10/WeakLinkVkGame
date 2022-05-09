@@ -1,15 +1,6 @@
-.Button__container {
-  width: 320px;
-  height: 100px;
-  border-radius: 42px;
-
+.Button {
+  height: 6.25rem;
+  line-height: 6.25rem;
   font-weight: 400;
-  font-size: 31px;
-  line-height: 100px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  cursor: pointer;
-  user-select: none;
+  font-size: 1.9375em;
 }

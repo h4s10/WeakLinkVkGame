@@ -15,9 +15,3 @@ export enum Authentication {
   Pending = 'Pending',
   Authenticated = 'Authenticated',
 }
-
-export enum AnswerColor {
-  Correct = 'var(--correct-color)',
-  Incorrect = 'var(--incorrect-color)',
-  Neutral = 'var(--neutral-answer-color)',
-}

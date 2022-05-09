@@ -1,27 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   font-family: "VK Sans Display", sans-serif;
-  background-color: var(--base-bg-color);
-  color: var(--base-text-color);
-}
-
-:root {
-  --vk-blue-color: #0077FF;
-  --vk-magenta-color: #FF0084;
-
-  --base-text-color: white;
-  --base-bg-color: #343434;
-  --inverted-bg-color: white;
-  --inverted-text-color: black;
-
-  --muted-color: #F2F3F5;
-  --incorrect-color: #EB5757;
-  --correct-color: #27AE60;
-  --neutral-answer-color: #F2C94C;
-
-  --score-color: #00EAFF;
-
-  --inactive-tab-color: #4F4F4F;
-  --active-tab-color: white;
+  @apply text-white;
+  @apply bg-base;
 }
 
 @font-face {

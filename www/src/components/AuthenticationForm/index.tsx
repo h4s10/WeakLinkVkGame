@@ -24,17 +24,17 @@ export default (
   }
 
   return <Page>
-    <h1 className="AuthenticationForm__header">Авторизация</h1>
-    <div className="AuthenticationForm__form">
+    <h1 className="text-h4 mb-2">Авторизация</h1>
+    <div className="flex w-full gap-2 my-auto align-middle rounded bg-white p-10">
       {
         (authentication === Authentication.Pending) && <Throbber/>
       }
       {
         authentication === Authentication.None && <>
-          <Button text="Ведущий" color="var(--vk-blue-color)" handler={authenticateAsAdmin} />
-          <Button text="Ассистент" color="var(--vk-blue-color)" handler={authenticateAsAdmin} />
-          <Button text="Игрок" color="var(--vk-magenta-color)" handler={authenticateAsPlayer} />
-          <Button text="Зритель" color="var(--vk-magenta-color)" handler={authenticateAsPlayer} />
+          <Button className="bg-vk-blue" text="Ведущий" handler={authenticateAsAdmin} />
+          <Button className="bg-vk-blue" text="Ассистент" handler={authenticateAsAdmin} />
+          <Button className="bg-vk-magenta" text="Игрок" handler={authenticateAsPlayer} />
+          <Button className="bg-vk-magenta" text="Зритель" handler={authenticateAsPlayer} />
         </>
       }
     </div>
