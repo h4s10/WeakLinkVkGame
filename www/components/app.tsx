@@ -41,7 +41,7 @@ export default () => {
 
   switch (gameState) {
     case GameState.Unauthorized:
-      return <AuthenticationForm {...{role, authentication, authenticate}} />
+      return <AuthenticationForm {...{authentication, authenticate}} />
     case GameState.Unstarted:
       return role === Role.Admin ? <GameSetup/> : <SplashScreen/>;
 

@@ -11,24 +11,17 @@ const mockAuthentication = (role, succeedOnSubmit) => {
 }
 
 export const AuthenticationFormConfigurable: Story<{
-  defaultRole: string[],
-  currentAuthentication: string[],
+  currentAuthentication: Authentication,
   succeedOnSubmit: boolean
 }> = ({
-  defaultRole,
   currentAuthentication,
   succeedOnSubmit,
-}) => <AuthenticationForm authentication={currentAuthentication} role={defaultRole} authenticate={(role) => mockAuthentication(role, succeedOnSubmit)}/>;
+}) => <AuthenticationForm authentication={currentAuthentication} authenticate={(role) => mockAuthentication(role, succeedOnSubmit)}/>;
 
 AuthenticationFormConfigurable.args = {
   succeedOnSubmit: true,
 }
 AuthenticationFormConfigurable.argTypes = {
-  defaultRole: {
-    options: [Role.Admin, Role.Player],
-    control: { type: "radio" },
-    defaultValue: Role.Player,
-  },
   currentAuthentication: {
     options: [Authentication.None, Authentication.Pending, Authentication.Authenticated],
     control: { type: "select" },
