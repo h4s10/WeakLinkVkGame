@@ -1,23 +1,22 @@
 import React, { useCallback } from 'react';
 import type { FunctionComponent, MouseEventHandler } from 'react';
+import cn from 'classnames';
 import './button.css';
-import { AnswerColor } from '../../lib/constants';
 
 interface Props {
   text: string,
-  color: AnswerColor | string,
+  className?: string,
   handler: () => void,
 }
 
-const Button: FunctionComponent<Props> = ({ text, color, handler }) => {
+const Button: FunctionComponent<Props> = ({ text, className, handler }) => {
   const onClick: MouseEventHandler = useCallback((event) => {
     event.preventDefault();
     handler();
   }, [handler]);
 
-  const backgroundColor = AnswerColor[color] ?? color;
-
-  return <div className='Button__container' style ={ { backgroundColor } } onClick={ onClick }>{ text }</div>
+  const defaultClassName = 'Button w-full rounded-md text-ellipsis overflow-hidden text-center cursor-pointer select-none';
+  return <div className={cn(defaultClassName, className)} onClick={ onClick }>{ text }</div>
 }
 
 export default Button;

@@ -3,9 +3,10 @@ import type { FunctionComponent, ReactNode } from 'react';
 import './page.css';
 
 export interface Props {
-  children: ReactNode
+  children: ReactNode;
 }
 
-const Page: FunctionComponent<Props> = ({ children }) => <div className="Page">{ children }</div>;
+const Page: FunctionComponent<Props> = ({ children }) =>
+  <div className="w-full h-full container mx-auto">{children}</div>;
 
-export default Page
+export default Page;
