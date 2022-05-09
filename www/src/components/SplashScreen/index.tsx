@@ -1,7 +1,7 @@
 import React from 'react';
 import type { ReactNode, FunctionComponent } from 'react';
-import SplashBackground from '../assets/splash.svg';
-import './styles.css';
+import SplashBackground from '../../../assets/splash.svg';
+import './splashScreen.css';
 
 const SplashScreen: FunctionComponent<{ caption?: string, content?: ReactNode }> = ({ caption = 'слабое звено', content  }) => <div className='SplashScreen__outer'>
   <SplashBackground className="SplashScreen__background"/>
