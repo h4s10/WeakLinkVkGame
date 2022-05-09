@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import type { FunctionComponent } from 'react';
+import React from 'react';
+import type { ReactNode, FunctionComponent } from 'react';
 import SplashBackground from '../assets/splash.svg';
 import './styles.css';
 

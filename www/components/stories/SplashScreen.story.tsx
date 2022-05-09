@@ -1,5 +1,6 @@
 import React from 'react';
 
+import '../global.css';
 import type { Story } from '@ladle/react';
 import SplashScreen from '../splash/SplashScreen';
 

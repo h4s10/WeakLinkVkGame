@@ -13,7 +13,7 @@ export default (
       authentication: Authentication,
       authenticate: (role) => void,
     }) => {
-  const roleRef = useRef<HTMLInputElement>();
+  const roleRef = useRef<HTMLSelectElement>();
 
   const submit = useCallback(() => {
     if (roleRef.current?.value) {
@@ -30,6 +30,7 @@ export default (
   }
 
   return <>
+    <h1>Авторизация</h1>
     <select id="role" ref={roleRef} defaultValue={role}>
       <option value={Role.Admin}>Admin</option>
       <option value={Role.Player}>Player</option>

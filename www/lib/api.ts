@@ -1,8 +1,5 @@
 // События/методы которые бэк вызывает у клиента
 // См /WeakLinkGame/WeakLinkGame.API/Interfaces/IGameClient.cs
-import { HubConnectionBuilder } from '@microsoft/signalr';
-import type { HubConnection } from '@microsoft/signalr';
-
 export enum ClientTask {
   PrepareSession = 'PrepareSession'
 }
