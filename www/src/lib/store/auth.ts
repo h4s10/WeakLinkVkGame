@@ -1,22 +1,32 @@
-import { createEffect, createEvent, createStore } from 'effector';
+import { createEffect, createEvent, createStore } from 'effector-logger';
 import { ServerTask } from '../api';
 import { Authentication, Role } from '../constants';
 import { getConnection } from '../connection';
 
-export const authentication = createStore<Authentication>(Authentication.None);
-export const authenticate = createEvent();
+export const authentication = createStore<Authentication>(Authentication.None, { name: 'Authentication status' });
+export const authenticate = createEvent<Role>('Authentication request');
 
-export const role = createStore<Role | null>(null);
+export const role = createStore<Role | null>(null, { name: 'Current role' });
+
+const acceptAuth = createEvent('Authentication successful');
+const revokeAuth = createEvent('Authentication revoked');
 
 const authenticateEffect = createEffect(async (role: Role) => await getConnection().send(ServerTask.Join, role));
-authentication.on(authenticate, () => Authentication.Pending);
-role.on(authenticate, (role) => role);
+authenticateEffect.done.watch(() => acceptAuth());
+authenticateEffect.fail.watch(() => revokeAuth());
 
-authentication.on(authenticateEffect.done, () => Authentication.Authenticated);
-authentication.on(authenticateEffect.fail, () => Authentication.None);
-role.on(authenticateEffect.fail, () => null);
+authentication
+  .on(authenticate, () => Authentication.Pending)
+  .on(acceptAuth, () => Authentication.Authenticated)
+  .on(revokeAuth, () => Authentication.None);
+
+role.on(authenticate, (prevRole, newRole) => newRole);
+role.on(acceptAuth, (prevRole, newRole) => newRole);
+role.on(revokeAuth, () => null);
 
 
-
-authentication.watch(v => console.log('authentication:', v));
-role.watch(v => console.log('role:', v));
+(window as any).debug = {
+  ...(window as any).debug ?? {},
+  acceptAuth,
+  revokeAuth,
+}

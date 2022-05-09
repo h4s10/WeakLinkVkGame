@@ -15,7 +15,7 @@ export const getConnection = (): HubConnection => {
 }
 
 export const useConnection = (url) => {
-  const [connection, setConnection] = useState<HubConnection>();
+  const [connection, setConnectionLocalState] = useState<HubConnection>();
 
   useEffect(() => {
     const connection = new HubConnectionBuilder()
@@ -24,9 +24,18 @@ export const useConnection = (url) => {
       .build();
 
     setConnection(connection);
+    setConnectionLocalState(connection);
 
-    return () => void connection.stop();
+    return () => {
+      void connection.stop();
+      setConnection(null);
+    }
   }, []);
 
   return connection;
+}
+
+(window as any).debug = {
+  ...(window as any).debug ?? {},
+  getSignalR: getConnection,
 }
