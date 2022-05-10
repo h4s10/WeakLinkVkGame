@@ -13,6 +13,9 @@ public class Round
     public int SessionId { get; set; }
     public Session Session { get; set; }
     
+    /// <summary>
+    /// Сессия в которой этот раунд является текущим
+    /// </summary>
     public Session? CurrentSession { get; set; }
     public List<UserRound> UserRounds { get; set; }
 }

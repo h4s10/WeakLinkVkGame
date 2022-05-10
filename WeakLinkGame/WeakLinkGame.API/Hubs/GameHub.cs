@@ -33,6 +33,10 @@ public class GameHub : Hub<IGameClient>
         var round = new Round(session.Id);
         await _context.Rounds.AddAsync(round);
         await _context.SaveChangesAsync();
+
+        session.CurrentRoundId = round.Id;
+        _context.Sessions.Update(session);
+        await _context.SaveChangesAsync();
         
         var userRounds = request.UserIds.Select(x => new UserRound(round.Id, x));
         await _context.UserRounds.AddRangeAsync(userRounds);
@@ -81,6 +85,49 @@ public class GameHub : Hub<IGameClient>
                 Name = x.User.Name,
                 PassCount = x.User.Questions?.Count(question => question.State == QuestionState.Passed) ?? 0,
                 RightCount = x.User.Questions?.Count(question => question.State == QuestionState.Answered) ?? 0
+            })
+        });
+    }
+
+    public async Task StartRound(int roundId)
+    {
+        var round = await _context.Rounds.FirstOrDefaultAsync(x => x.Id == roundId);
+        round.StartTime = DateTime.Now;
+        _context.Rounds.Update(round);
+        await _context.SaveChangesAsync();
+        await GetQuestion(QuestionLevel.Easy);
+    }
+
+    public async Task CreateRound(int sessionId)
+    {
+        var session = await _context.Sessions.FirstOrDefaultAsync(x => x.Id == sessionId);
+        var round = new Round(session.Id);
+        await _context.Rounds.AddAsync(round);
+        await _context.SaveChangesAsync();
+
+        session.CurrentRoundId = round.Id;
+        _context.Sessions.Update(session);
+        await _context.SaveChangesAsync();
+        await StartRound(round.Id);
+    }
+
+    public async Task GetQuestion(QuestionLevel level)
+    {
+        var question = await _context.Questions.Where(x => x.State == QuestionState.New && x.Level == level)
+            .Include(x => x.Answers)
+            .FirstOrDefaultAsync();
+        if (question is null)
+            return;
+        
+        await Clients.All.SendQuestion(new QuestionResponse()
+        {
+            Id = question.Id,
+            Text = question.Text,
+            Answers = question.Answers.Select(x => new AnswerDto()
+            {
+                Id = x.Id,
+                IsCorrect = x.IsCorrect,
+                Text = x.Text,
             })
         });
     }

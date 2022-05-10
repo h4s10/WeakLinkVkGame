@@ -6,4 +6,5 @@ public interface IGameClient
 {
     Task SendRoundState(SendRoundStateResponse response);
     Task SendSessionState(IEnumerable<int> response, int? currentRoundId);
+    Task SendQuestion(QuestionResponse response);
 }
