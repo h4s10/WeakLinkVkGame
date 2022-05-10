@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 
 import 'effector-logger/inspector';
 import './global.css';
@@ -22,7 +22,7 @@ export default () => {
   const authentication = useStore(authenticationStore);
 
   if (connectionError) {
-    return <SplashScreen caption="мы самое слабое звено" content={ <div className="font-mono">{connectionError.toString()}</div> }/>
+    return <SplashScreen caption="Мы самое слабое звено" content={ <div className="text-h4 font-mono">{connectionError.toString()}</div> }/>
   }
 
   if (connectionState !== HubConnectionState.Connected) {

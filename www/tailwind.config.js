@@ -22,7 +22,7 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        'h1': '10.75rem', // 172px
+        'h1': '12.5rem', // 200px
         'h2': '9rem', // 144px
         'h3': '7.75rem', // 124px
         'h4': '4.375rem', // 70px
