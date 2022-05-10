@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeakLinkGame.DataAccessLayer;
+using WeakLinkGame.DataContracts.Responses;
 
 namespace WeakLinkGame.API.Controllers;
 
@@ -17,9 +18,9 @@ public class SessionsController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<int>>> GeSessions()
+    public async Task<ActionResult<IEnumerable<GetSessionsResponse>>> GetSessions()
     {
-        var result = await _context.Sessions.Select(x => x.Id).ToListAsync();
+        var result = await _context.Sessions.Select(x => new GetSessionsResponse(){Id = x.Id, Name = x.Name}).ToListAsync();
         return Ok(result);
     }
 }
