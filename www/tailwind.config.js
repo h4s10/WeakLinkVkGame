@@ -9,7 +9,7 @@ module.exports = {
       'vk-magenta': '#FF0084',
 
       'white': '#fff',
-      'base': '#343434',
+      'dark': '#343434',
 
       'muted': '#F2F3F5',
       'incorrect': '#EB5757',

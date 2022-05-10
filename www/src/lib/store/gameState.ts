@@ -1,6 +1,7 @@
 import { createEvent, createStore } from 'effector-logger';
 import { Authentication, GameState } from '../constants';
 import { authentication } from './auth';
+import { session } from './session';
 
 export const gameState = createStore<GameState>(GameState.Unauthorized, { name: 'Game state' });
 export const nextState = createEvent<GameState>('Game state advance');
@@ -12,16 +13,25 @@ gameState.on(authentication, (state, authentication) => {
     return GameState.Unauthorized;
   }
 
-  if (authentication === Authentication.Authenticated && state === GameState.Unauthorized) {
+  if (state === GameState.Unauthorized && authentication === Authentication.Authenticated) {
+    return GameState.SessionSelect;
+  }
+
+  return undefined;
+});
+
+gameState.on(session, (state, joinedSession) => {
+  if (state === GameState.SessionSelect && joinedSession !== undefined) {
     return GameState.Unstarted;
   }
 
-  return state;
+  return undefined;
 });
 
 (window as any).debug = {
   ...(window as any).debug ?? {},
   forceStateUnauthorized() { nextState(GameState.Unauthorized) },
+  forceStateSessionSelect() { nextState(GameState.SessionSelect) },
   forceStateUnstarted() { nextState(GameState.Unstarted) },
   forceStateRound() { nextState(GameState.Round) },
   forceStateRoundEnded() { nextState(GameState.RoundEnded) },

@@ -1,5 +1,6 @@
 export enum GameState {
   Unauthorized = 'Unauthorized',
+  SessionSelect = 'SessionSelect',
   Unstarted = 'Unstarted',
   Round = 'Round',
   RoundEnded = 'RoundEnded',

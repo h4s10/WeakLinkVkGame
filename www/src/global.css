@@ -5,7 +5,7 @@
 body {
   font-family: "VK Sans Display", sans-serif;
   @apply text-white;
-  @apply bg-base;
+  @apply bg-dark;
 }
 
 @font-face {

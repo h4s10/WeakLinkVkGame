@@ -4,7 +4,10 @@ import { Authentication, Role } from '../constants';
 import { getConnectionInstance } from '../connection';
 
 export const authentication = createStore<Authentication>(Authentication.None, { name: 'Authentication status' });
-export const authenticate = createEffect((role: Role) => getConnectionInstance().invoke(ServerTask.Join, role));
+export const authenticate = createEffect({
+  name: 'Authenticate',
+  handler: (role: Role) => getConnectionInstance().invoke(ServerTask.Join, role),
+});
 
 export const role = createStore<Role | null>(null, { name: 'Current role' });
 
