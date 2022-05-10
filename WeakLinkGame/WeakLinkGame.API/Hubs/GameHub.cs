@@ -15,7 +15,7 @@ public class GameHub : Hub<IGameClient>
     }
     
     private readonly WLGDbDataContext _context;
-    
+
     public async Task Join(string group) => await Groups.AddToGroupAsync(Context.ConnectionId, group);
 
     public async Task Leave(string group) => await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
