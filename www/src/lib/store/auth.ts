@@ -1,19 +1,18 @@
 import { createEffect, createEvent, createStore } from 'effector-logger';
 import { ServerTask } from '../api';
 import { Authentication, Role } from '../constants';
-import { getConnection } from '../connection';
+import { getConnectionInstance } from '../connection';
 
 export const authentication = createStore<Authentication>(Authentication.None, { name: 'Authentication status' });
-export const authenticate = createEvent<Role>('Authentication request');
+export const authenticate = createEffect((role: Role) => getConnectionInstance().invoke(ServerTask.Join, role));
 
 export const role = createStore<Role | null>(null, { name: 'Current role' });
 
 const acceptAuth = createEvent('Authentication successful');
 const revokeAuth = createEvent('Authentication revoked');
 
-const authenticateEffect = createEffect(async (role: Role) => await getConnection().send(ServerTask.Join, role));
-authenticateEffect.done.watch(() => acceptAuth());
-authenticateEffect.fail.watch(() => revokeAuth());
+authenticate.done.watch(() => acceptAuth());
+authenticate.fail.watch(() => revokeAuth());
 
 authentication
   .on(authenticate, () => Authentication.Pending)

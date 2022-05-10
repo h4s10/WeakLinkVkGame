@@ -12,5 +12,5 @@ export enum ServerTask {
   CreateSession = 'CreateSession',
 }
 
-export const HUB_URL = 'https://localhost:7089/game';
+export const HUB_URL = 'http://localhost:7089/game';
 

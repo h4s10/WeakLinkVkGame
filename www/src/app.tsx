@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import 'effector-logger/inspector';
 import './global.css';
@@ -15,28 +15,19 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { assertNever } from './lib/utils';
 
 export default () => {
-  const connection = useConnection(HUB_URL);
-  const [connectionError, setConnectionError] = useState<Error | null>(null);
+  const [connection, connectionState, connectionError] = useConnection(HUB_URL);
 
   const gameState = useStore(gameStateStore);
   const role = useStore(roleStore);
   const authentication = useStore(authenticationStore);
 
-  useEffect(() => {
-    connection?.start().catch(setConnectionError);
-  }, [connection]);
-
-  if (!connection || connection.state === HubConnectionState.Connecting) {
-    return <SplashScreen/>;
+  if (connectionError) {
+    return <SplashScreen caption="мы самое слабое звено" content={ <div className="font-mono">{connectionError.toString()}</div> }/>
   }
 
-  // if (connectionError) {
-  //   return <SplashScreen caption="мы самое слабое звено" content={ <div className="font-mono">{connectionError.toString()}</div> }/>
-  // }
-  //
-  // if (connection.state !== HubConnectionState.Connected) {
-  //   return <SplashScreen content={ <h2>{connection.state}</h2> }/>;
-  // }
+  if (connectionState !== HubConnectionState.Connected) {
+    return <SplashScreen/>;
+  }
 
   switch (gameState) {
     case GameState.Unauthorized:

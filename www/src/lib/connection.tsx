@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { HubConnection } from '@microsoft/signalr';
+import { HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 
 let instance: HubConnection | null = null;
 
-export const setConnection = (newConnection) => instance = newConnection;
+export const setConnectionInstance = (newConnection) => instance = newConnection;
 
-export const getConnection = (): HubConnection => {
+export const getConnectionInstance = (): HubConnection => {
   if (instance) {
     return instance;
   }
@@ -15,27 +15,51 @@ export const getConnection = (): HubConnection => {
 }
 
 export const useConnection = (url) => {
-  const [connection, setConnectionLocalState] = useState<HubConnection>();
+  const connection = useRef<HubConnection>();
+  const [state, setState] = useState<HubConnectionState>();
+  const [error, setError] = useState<Error>();
+  const updateConnectionState = useCallback(() => {
+    console.log('Signal R connection state', connection.current?.state);
+    setState(connection.current?.state);
+
+    if (connection.current?.state === HubConnectionState.Connected) {
+      setError(undefined);
+    }
+  }, [connection.current]);
 
   useEffect(() => {
-    const connection = new HubConnectionBuilder()
+    connection.current = new HubConnectionBuilder()
       .withUrl(url)
       .withAutomaticReconnect()
       .build();
 
-    setConnection(connection);
-    setConnectionLocalState(connection);
+    connection.current.onreconnected(updateConnectionState);
+    connection.current.onreconnecting(updateConnectionState);
+    connection.current.onclose(updateConnectionState);
+
+    setConnectionInstance(connection.current);
+    updateConnectionState();
+
+    connection.current.start()
+      .then(
+        updateConnectionState,
+        (error) => {
+          setError(error);
+          updateConnectionState();
+        }
+    );
 
     return () => {
-      void connection.stop();
-      setConnection(null);
+      void connection.current?.stop();
+      updateConnectionState();
+      setConnectionInstance(null);
     }
   }, []);
 
-  return connection;
+  return [connection, state, error];
 }
 
 (window as any).debug = {
   ...(window as any).debug ?? {},
-  getSignalR: getConnection,
+  getSignalR: getConnectionInstance,
 }
