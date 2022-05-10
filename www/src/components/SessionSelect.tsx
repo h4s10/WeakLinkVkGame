@@ -9,7 +9,7 @@ interface Props {
   canCreate: boolean,
   sessions: Session[],
   refresh: () => Promise<any>,
-  select: (id: Session) => void,
+  select: (id: Session['id']) => void,
   createNew: (name: string) => void,
 }
 
@@ -56,8 +56,8 @@ const SessionSelect: FunctionComponent<Props> = ({
             <h5 className="text-dark text-h5 mb-5">Игры в процессе</h5>
               <div className="overscroll-y-scroll flex gap-5 flex-wrap place-content-evenly">
                 {
-                  sessions.map(sessionId =>
-                    <Button className="bg-vk-magenta max-w-max px-20" key={sessionId} text={String(sessionId)} handler={() => select(sessionId)}/>
+                  sessions.map(({ id, name }) =>
+                    <Button className="bg-vk-magenta max-w-max px-20" key={id} text={name} handler={() => select(id)}/>
                   )
                 }
               </div>

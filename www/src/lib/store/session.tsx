@@ -2,10 +2,10 @@ import { createEffect, createStore } from 'effector-logger';
 import { getConnectionInstance } from '../connection';
 import { CreateSessionRequest, request, RestTask, ServerTask, Session } from '../api';
 
-export const session = createStore<Session>(null, { name: 'Session id' });
+export const session = createStore<Session['id']>(null, { name: 'Session id' });
 export const availableSessions = createStore<Session[]>([], {
   name: 'Available sessions',
-  updateFilter: (newSessions, oldSessions) => newSessions.length !== oldSessions.length || newSessions.some((s, i) => s !== oldSessions[i]),
+  updateFilter: (newSessions, oldSessions) => newSessions.length !== oldSessions.length || newSessions.some((s, i) => s.id !== oldSessions[i].id),
 });
 
 export const createSession = createEffect({
@@ -18,7 +18,7 @@ export const createSession = createEffect({
 
 export const joinSession = createEffect({
   name: 'Join session',
-  handler: (id: Session) => getConnectionInstance().invoke<void>(ServerTask.JoinSession, id),
+  handler: (id: Session['id']) => getConnectionInstance().invoke<void>(ServerTask.JoinSession, id),
 });
 
 export const refreshAvailable = createEffect({
@@ -26,8 +26,8 @@ export const refreshAvailable = createEffect({
   handler: () => request<Session[], void>('GET', RestTask.Sessions),
 });
 
-session.on(joinSession.done, (prevSession, { params: joinedSession } ) => joinedSession);
-availableSessions.on(refreshAvailable.doneData, sessions => sessions);
+session.on(joinSession.doneData, (prevSession, joinedSession) => joinedSession);
+availableSessions.on(refreshAvailable.doneData, (prevSessions, newSessions) => newSessions);
 createSession.done.watch(() => refreshAvailable());
 
 (window as any).debug = {

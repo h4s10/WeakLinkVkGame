@@ -26,7 +26,10 @@ export enum RestTask {
   Sessions = 'sessions',
 }
 
-export type Session = number;
+export interface Session {
+  id: number,
+  name: string,
+}
 
 export interface CreateUserRequest {
   Name: string,
