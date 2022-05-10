@@ -11,8 +11,4 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Dictionaries" />
-    </ItemGroup>
-
 </Project>

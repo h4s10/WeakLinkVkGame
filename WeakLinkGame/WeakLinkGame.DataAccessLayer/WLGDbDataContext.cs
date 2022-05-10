@@ -9,6 +9,8 @@ public class WLGDbDataContext : DbContext
     public DbSet<Session> Sessions { get; set; }
     public DbSet<Round> Rounds { get; set; }
     public DbSet<UserRound> UserRounds { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Answer> Answers { get; set; }
     
     public WLGDbDataContext(DbContextOptions<WLGDbDataContext> options) : base(options)
     {
@@ -38,5 +40,13 @@ public class WLGDbDataContext : DbContext
             .HasOne(x => x.Round)
             .WithMany(x => x.UserRounds)
             .HasForeignKey(x => x.RoundId);
+        modelBuilder.Entity<Question>()
+            .HasOne(x => x.User)
+            .WithMany(x => x.Questions)
+            .HasForeignKey(x => x.UserId);
+        modelBuilder.Entity<Answer>()
+            .HasOne(x => x.Question)
+            .WithMany(x => x.Answers)
+            .HasForeignKey(x => x.QuestionId);
     }
 }

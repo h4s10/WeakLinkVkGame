@@ -16,7 +16,6 @@ public class SessionsController : ControllerBase
     
     public WLGDbDataContext _context { get; set; }
     
-    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetSessionsResponse>>> GetSessions()
     {

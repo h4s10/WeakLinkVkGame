@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using WeakLinkGame.API.Interfaces;
 using WeakLinkGame.DataAccessLayer;
+using WeakLinkGame.DataAccessLayer.Dictionaries;
 using WeakLinkGame.DataAccessLayer.Entities;
 using WeakLinkGame.DataContracts.Dictionaries;
 using WeakLinkGame.DataContracts.DTO;
@@ -39,6 +40,7 @@ public class GameHub : Hub<IGameClient>
 
         userRounds = await _context.UserRounds.Where(x => x.RoundId == round.Id)
             .Include(x => x.User)
+            .ThenInclude(x => x.Questions)
             .ToListAsync();
         await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse()
         {
@@ -48,8 +50,8 @@ public class GameHub : Hub<IGameClient>
                 Id = x.UserId,
                 IsWeak = x.IsWeak,
                 Name = x.User.Name,
-                PassCount = x.PassCount,
-                RightCount = x.RightCount
+                PassCount = x.User.Questions?.Count(question => question.State == QuestionState.Passed) ?? 0,
+                RightCount = x.User.Questions?.Count(question => question.State == QuestionState.Answered) ?? 0
             })
         });
     }
@@ -67,6 +69,7 @@ public class GameHub : Hub<IGameClient>
     {
         var userRounds = await _context.UserRounds.Where(x => x.RoundId == roundId)
             .Include(x => x.User)
+            .ThenInclude(x => x.Questions)
             .ToListAsync();
         await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse()
         {
@@ -76,8 +79,8 @@ public class GameHub : Hub<IGameClient>
                 Id = x.UserId,
                 IsWeak = x.IsWeak,
                 Name = x.User.Name,
-                PassCount = x.PassCount,
-                RightCount = x.RightCount
+                PassCount = x.User.Questions?.Count(question => question.State == QuestionState.Passed) ?? 0,
+                RightCount = x.User.Questions?.Count(question => question.State == QuestionState.Answered) ?? 0
             })
         });
     }

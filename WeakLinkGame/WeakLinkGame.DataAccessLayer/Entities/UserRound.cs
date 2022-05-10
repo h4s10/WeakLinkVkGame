@@ -17,8 +17,6 @@ public class UserRound
     public User User { get; set; }
 
     public int Score { get; set; }
-    public int PassCount { get; set; }
-    public int RightCount { get; set; }
     public int BankSum { get; set; }
     public bool IsWeak { get; set; }
 }
