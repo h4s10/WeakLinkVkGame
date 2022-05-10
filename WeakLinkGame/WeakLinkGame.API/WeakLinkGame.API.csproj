@@ -20,4 +20,10 @@
       <ProjectReference Include="..\WeakLinkGame.DataContracts\WeakLinkGame.DataContracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="questions.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

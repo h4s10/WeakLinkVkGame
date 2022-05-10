@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WeakLinkGame.DataAccessLayer;
 using Serilog;
 using WeakLinkGame.API.Hubs;
+using WeakLinkGame.API.Services;
 using ILogger = Serilog.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ ILogger logger = new LoggerConfiguration()
 builder.Logging.AddSerilog(logger);
 builder.Services.AddSingleton(logger);
 // Add services to the container.
+builder.Services.AddTransient<IQuestionParser, QuestionParser>();
 builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
@@ -32,6 +34,19 @@ builder.Services.AddCors(options =>
     );
 });
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<WLGDbDataContext>();
+    var isQuestionsExists = context.Questions.Any();
+    if (!isQuestionsExists)
+    {
+        var parser = scope.ServiceProvider.GetRequiredService<IQuestionParser>();
+        var questionFilePath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetSection("QuestionsFilePath").Value);
+        var questions = parser.Parse(questionFilePath);
+        context.Questions.AddRangeAsync(questions);
+        context.SaveChangesAsync();
+    }
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
