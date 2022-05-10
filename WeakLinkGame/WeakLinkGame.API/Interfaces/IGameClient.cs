@@ -1,6 +1,9 @@
+using WeakLinkGame.DataContracts.Responses;
+
 namespace WeakLinkGame.API.Interfaces;
 
 public interface IGameClient
 {
-    Task PrepareSession(int sessionId);
+    Task SendRoundState(SendRoundStateResponse response);
+    Task SendSessionState(IEnumerable<int> response, int? currentRoundId);
 }
