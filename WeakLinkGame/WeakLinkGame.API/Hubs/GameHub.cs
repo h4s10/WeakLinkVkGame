@@ -95,7 +95,7 @@ public class GameHub : Hub<IGameClient>
         round.StartTime = DateTime.Now;
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
-        await GetQuestion(QuestionLevel.Easy);
+        await GetQuestion();
     }
 
     public async Task CreateRound(int sessionId)
@@ -111,9 +111,9 @@ public class GameHub : Hub<IGameClient>
         await StartRound(round.Id);
     }
 
-    public async Task GetQuestion(QuestionLevel level)
+    public async Task GetQuestion()
     {
-        var question = await _context.Questions.Where(x => x.State == QuestionState.New && x.Level == level)
+        var question = await _context.Questions.Where(x => x.State == QuestionState.New)
             .Include(x => x.Answers)
             .FirstOrDefaultAsync();
         if (question is null)
