@@ -15,9 +15,9 @@ const Button: FunctionComponent<Props> = ({ text, className, handler }) => {
     handler();
   }, [handler]);
 
-  const defaultClassName = 'Button w-full rounded-md text-ellipsis overflow-hidden text-center cursor-pointer select-none';
-  return <div className={cn(defaultClassName, className)} onClick={ onClick }>{ text }</div>
-}
+  const defaultClassName = 'Button w-full rounded-lg text-ellipsis overflow-hidden text-center cursor-pointer select-none';
+  return <div className={cn(defaultClassName, className)} onClick={onClick}>{text}</div>;
+};
 
 export default Button;
 

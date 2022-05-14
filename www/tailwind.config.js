@@ -9,7 +9,9 @@ module.exports = {
       'vk-magenta': '#FF0084',
 
       'white': '#fff',
+      'black': '#000',
       'dark': '#343434',
+      'gray': '#676767',
 
       'muted': '#F2F3F5',
       'incorrect': '#EB5757',
@@ -26,12 +28,16 @@ module.exports = {
         'h2': '9rem', // 144px
         'h3': '7.75rem', // 124px
         'h4': '4.375rem', // 70px
-        'h5': '2.125rem', // 34px
+        'h5': '2.4rem', // 40px
+        'h6': '2.125rem', // 34px
+        'h7': '1.5rem', // 24px
+        'h8': '1.2rem', // 17px
       },
       borderRadius: {
         'sm': '0.3125rem',
         DEFAULT: '0.5rem',
-        'md': '2.625rem',
+        'md': '1rem',
+        'lg': '2.625rem',
       },
     },
   },
