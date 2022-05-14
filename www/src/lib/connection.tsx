@@ -14,7 +14,7 @@ export const getConnectionInstance = (): HubConnection => {
   throw new ReferenceError('Connection is not created');
 }
 
-export const useConnection = (url) => {
+export const useConnection = (url): [HubConnection, HubConnectionState, Error] => {
   const connection = useRef<HubConnection>();
   const [state, setState] = useState<HubConnectionState>();
   const [error, setError] = useState<Error>();
@@ -56,7 +56,7 @@ export const useConnection = (url) => {
     }
   }, []);
 
-  return [connection, state, error];
+  return [connection.current, state, error];
 }
 
 (window as any).debug = {

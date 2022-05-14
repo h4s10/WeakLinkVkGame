@@ -9,7 +9,7 @@ export const availableSessions = createStore<Session[]>([], {
 });
 
 export const createSession = createEffect({
-  name: 'CreateSession',
+  name: 'Create session',
   handler: ({ name, users }: {name: string, users: number[]}) => getConnectionInstance().invoke<void>(ServerTask.CreateSession, {
     SessionName: name,
     UserIds: users

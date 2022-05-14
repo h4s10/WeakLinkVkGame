@@ -1,9 +1,13 @@
 export enum GameState {
   Unauthorized = 'Unauthorized',
   SessionSelect = 'SessionSelect',
-  Unstarted = 'Unstarted',
   Round = 'Round',
-  RoundEnded = 'RoundEnded',
+}
+
+export enum RoundState {
+  Unstarted = 'Unstarted',
+  Playing = 'Playing',
+  Ended = 'Ended',
 }
 
 export enum Role {

@@ -22,7 +22,7 @@ gameState.on(authentication, (state, authentication) => {
 
 gameState.on(session, (state, joinedSession) => {
   if (state === GameState.SessionSelect && joinedSession !== undefined) {
-    return GameState.Unstarted;
+    return GameState.Round;
   }
 
   return undefined;
@@ -32,7 +32,5 @@ gameState.on(session, (state, joinedSession) => {
   ...(window as any).debug ?? {},
   forceStateUnauthorized() { nextState(GameState.Unauthorized) },
   forceStateSessionSelect() { nextState(GameState.SessionSelect) },
-  forceStateUnstarted() { nextState(GameState.Unstarted) },
   forceStateRound() { nextState(GameState.Round) },
-  forceStateRoundEnded() { nextState(GameState.RoundEnded) },
 }

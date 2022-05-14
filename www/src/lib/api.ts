@@ -19,6 +19,9 @@ export enum ServerTask {
   CreateSession = 'CreateSession',
   GetSessionState = 'GetSessionState',
   GetRoundState = 'GetRoundState',
+  StartRound = 'StartRound',
+  CreateRound = 'CreateRound',
+  GetQuestion = 'GetQuestion',
 }
 
 export enum RestTask {

@@ -8,7 +8,6 @@ import { authenticate, authentication as authenticationStore, role as roleStore 
 import { GameState, Role } from './lib/constants';
 import AuthenticationForm from './components/AuthenticationForm';
 import { useStore } from 'effector-react';
-import GameSetup from './components/GameSetup';
 import SplashScreen from './components/SplashScreen';
 import Game from './components/Game';
 import { PlayerCard } from './components/PlayerCard';
@@ -17,7 +16,7 @@ import GameAdmin from './components/GameAdmin';
 
 import { HubConnectionState } from '@microsoft/signalr';
 import { availableSessions, createSession, joinSession, refreshAvailable as refreshSessions } from './lib/store/session';
-import { SERVER_HOST, SIGNAL_R_HUB } from './lib/api';
+import { ClientTask, SERVER_HOST, SIGNAL_R_HUB } from './lib/api';
 import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
 
 export default () => {
@@ -37,6 +36,10 @@ export default () => {
     return <SplashScreen />;
   }
 
+  for (const name of Object.keys(ClientTask)) {
+    connection.on(name, (data) => console.log(name, data));
+  }
+
   switch (gameState) {
     case GameState.Unauthorized:
       return <AuthenticationForm {...{ authentication, authenticate }} />;
@@ -51,11 +54,7 @@ export default () => {
         createUser={ createUser }
         refreshUsers={ refreshUsers }
       />;
-    case GameState.Unstarted:
-      return role === Role.Admin ? <GameSetup /> : <SplashScreen />;
-
     case GameState.Round:
-
       function List() {
         return <div className="grid grid-cols-3 gap-6 w-full h-full">
           <div className="basis-1/4"><PlayerCard player={{ name: 'Лиза Кудроу' } as any} playerStatus={{} as any} /></div>
