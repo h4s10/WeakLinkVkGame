@@ -22,7 +22,7 @@ function findNextPlayer(players: { player: Player }[], currentPlayer: Player): P
 const questionsData: Question[] = [
   {
     id: '01',
-    text: 'Что присвоится в переменную `$N` в **`PHP`**?  \n `$arr = [1,2,3];`  \n `$n = $arr[100500];`',
+    text: 'Что присвоится в переменную `$N` в **`PHP`**?  \n `$arr = [1,2,3];`  \n `$n = $arr[100500];` ',
     variants: [
       { label: '`null`' },
       { label: '*Пустая строка*' },

@@ -26,7 +26,7 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
       <div className="flex-none mr-12"><Avatar /></div>
       <div className="flex-1 text-h5 2xl:text-h4 leading-[5rem] truncate">Отвечает <span className="font-bold">{player.name}</span></div>
-      <div className="flex-none mr-12 cursor-pointer" onClick={() => onClose() }><Cancel /></div>
+      <div className="flex-none cursor-pointer" onClick={() => onClose() }><Cancel /></div>
     </div>
     <hr />
     <div className="flex-1 pt-[1.5rem] 2xl:pt-[2.75rem] flex gap-2 flex-col justify-around">
@@ -35,7 +35,7 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
           <QMark />
         </div>
         <div className="flex-1">
-          <ReactMarkdown className="text-h5">{text}</ReactMarkdown>
+          <ReactMarkdown className="text-h7 2xl:text-h5">{text}</ReactMarkdown>
         </div>
       </div>
       {variants.length ? <div className="flex gap-4">
