@@ -108,7 +108,7 @@ const GameAdmin: FunctionComponent<Props> = ({
       { (!canCreate || adminScreen === 'sessions') && <>
         {
           canCreate && <>
-            <h5 className="text-dark text-h5 mb-5">Новая игра</h5>
+            <h6 className="text-dark text-h6 mb-5">Новая игра</h6>
             <Input buttonText="Добавить" handler={startSessionCreation}/>
           </>
         }
@@ -123,7 +123,7 @@ const GameAdmin: FunctionComponent<Props> = ({
         {
           !canCreate && !sessions.length && <div className="flex gap-5 flex-col items-center text-center content-center">
             <h4 className="text-h4 text-dark">Нет доступных игр.</h4>
-            <h4 className="text-h5 text-dark">Дождитесь когда Ведущий создаст игру.</h4>
+            <h4 className="text-h6 text-dark">Дождитесь когда Ведущий создаст игру.</h4>
           </div>
         }
       </> }
@@ -131,7 +131,7 @@ const GameAdmin: FunctionComponent<Props> = ({
       {/* Наполнение игры */}
       {canCreate && adminScreen === 'sessionUsers' && <>
         <div className='flex gap-5'>
-          <h5 className="text-dark text-h5 mb-5">Игроки «{newSessionName}»</h5>
+          <h6 className="text-dark text-h6 mb-5">Игроки «{newSessionName}»</h6>
           <div className="ml-auto"/>
           <Button className='bg-incorrect max-w-max px-10' text='Отмена' handler={abortSessionCreation}/>
           <Button className='bg-correct max-w-max px-10' text='Создать' handler={createSession}/>
@@ -160,7 +160,7 @@ const GameAdmin: FunctionComponent<Props> = ({
 
       {/* Редактирование игроков */}
       { canCreate && adminScreen === 'users' && <>
-        <h5 className="text-dark text-h5 mb-5">Добавить игрока</h5>
+        <h6 className="text-dark text-h6 mb-5">Добавить игрока</h6>
         <Input buttonText="Добавить" handler={createUser}/>
         <List<User>
           header="Игроки"
