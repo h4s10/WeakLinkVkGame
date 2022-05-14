@@ -3,7 +3,7 @@ import type { FunctionComponent, MouseEventHandler } from 'react';
 import cn from 'classnames';
 import './button.css';
 
-interface Props {
+export interface Props {
   text: string,
   className?: string,
   handler: () => void,

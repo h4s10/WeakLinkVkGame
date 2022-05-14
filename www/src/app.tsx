@@ -10,11 +10,12 @@ import AuthenticationForm from './components/AuthenticationForm';
 import { useStore } from 'effector-react';
 import GameSetup from './components/GameSetup';
 import SplashScreen from './components/SplashScreen';
-import SessionSelect from './components/SessionSelect';
+import GameAdmin from './components/GameAdmin';
 import { HubConnectionState } from '@microsoft/signalr';
 import { assertNever } from './lib/utils';
-import { availableSessions, createSession, joinSession, refreshAvailable } from './lib/store/session';
+import { availableSessions, createSession, joinSession, refreshAvailable as refreshSessions } from './lib/store/session';
 import { SERVER_HOST, SIGNAL_R_HUB } from './lib/api';
+import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
 
 export default () => {
   const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_HOST).toString());
@@ -23,6 +24,7 @@ export default () => {
   const role = useStore(roleStore);
   const authentication = useStore(authenticationStore);
   const sessions = useStore(availableSessions);
+  const users = useStore(usersStore);
 
   if (connectionError) {
     return <SplashScreen caption="Мы самое слабое звено" content={ <div className="text-h4 font-mono">{connectionError.toString()}</div> }/>
@@ -36,12 +38,15 @@ export default () => {
     case GameState.Unauthorized:
       return <AuthenticationForm {...{authentication, authenticate}} />
     case GameState.SessionSelect:
-      return <SessionSelect
+      return <GameAdmin
         canCreate={ role === Role.Admin }
         sessions={ sessions }
-        refresh={ () => refreshAvailable() }
-        select={ joinSession }
-        createNew={ createSession }
+        refreshSessions={ () => refreshSessions() }
+        selectSession={ joinSession }
+        createNewSession={ createSession }
+        users={ users }
+        createUser={ createUser }
+        refreshUsers={ refreshUsers }
       />
     case GameState.Unstarted:
       return role === Role.Admin ? <GameSetup/> : <SplashScreen/>;

@@ -40,10 +40,10 @@ export interface CreateSessionRequest {
   UserIds: number[],
 }
 
-export interface GetUserResponse {
-  Id: number,
-  Name: string,
-  Role: Role,
+export interface User {
+  id: number,
+  name: string,
+  role: Role,
 }
 
 export interface UserRound {
@@ -62,6 +62,9 @@ export interface RoundStateResponse {
 export const request = async <Response extends unknown, Payload extends unknown> (method: 'GET' | 'POST', task: RestTask, body?: Payload): Promise<Response> => {
   const response = await fetch(new URL(task, SERVER_HOST).toString(), {
     method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 

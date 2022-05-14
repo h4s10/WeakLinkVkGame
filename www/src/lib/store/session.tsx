@@ -10,7 +10,7 @@ export const availableSessions = createStore<Session[]>([], {
 
 export const createSession = createEffect({
   name: 'CreateSession',
-  handler: (name: string, users: number[]) => getConnectionInstance().invoke<void>(ServerTask.CreateSession, {
+  handler: ({ name, users }: {name: string, users: number[]}) => getConnectionInstance().invoke<void>(ServerTask.CreateSession, {
     SessionName: name,
     UserIds: users
   } as CreateSessionRequest),
@@ -28,7 +28,7 @@ export const refreshAvailable = createEffect({
 
 session.on(joinSession.doneData, (prevSession, joinedSession) => joinedSession);
 availableSessions.on(refreshAvailable.doneData, (prevSessions, newSessions) => newSessions);
-createSession.done.watch(() => refreshAvailable());
+createSession.finally.watch(() => refreshAvailable());
 
 (window as any).debug = {
   ...(window as any).debug ?? {},
