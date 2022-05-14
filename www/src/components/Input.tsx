@@ -28,7 +28,7 @@ const Input: FunctionComponent<Props> = ({ handler, buttonText }) => {
 
   return <form className="flex place-content-between gap-3 mb-10" onSubmit={onSubmit}>
     <input type="text" className="w-full border border-2 border-vk-blue rounded text-dark text-h5 p-3" ref={elementRef}/>
-    <Button className="bg-vk-blue max-w-xs" text={buttonText} handler={handlerCallback} />
+    <Button className="bg-vk-blue max-w-xs" handler={handlerCallback}>{buttonText}</Button>
   </form>
 }
 

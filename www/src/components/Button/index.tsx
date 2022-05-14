@@ -4,19 +4,19 @@ import cn from 'classnames';
 import './button.css';
 
 export interface Props {
-  text: string,
   className?: string,
   handler: () => void,
+  children: JSX.Element | string,
 }
 
-const Button: FunctionComponent<Props> = ({ text, className, handler }) => {
+const Button: FunctionComponent<Props> = ({ children, className, handler }) => {
   const onClick: MouseEventHandler = useCallback((event) => {
     event.preventDefault();
     handler();
   }, [handler]);
 
-  const defaultClassName = 'Button w-full rounded-lg text-ellipsis overflow-hidden text-center cursor-pointer select-none';
-  return <div className={cn(defaultClassName, className)} onClick={onClick}>{text}</div>;
+  const defaultClassName = 'Button w-full text-ellipsis overflow-hidden text-center cursor-pointer select-none transition-shadow hover:shadow-md';
+  return <div className={cn(defaultClassName, className)} onClick={onClick}>{children}</div>;
 };
 
 export default Button;

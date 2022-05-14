@@ -17,8 +17,7 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { availableSessions, createSession, joinSession, refreshAvailable as refreshSessions } from './lib/store/session';
 import { ClientTask, SERVER_HOST, SIGNAL_R_HUB } from './lib/api';
 import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
-import { Player, PlayerGameStatus } from './lib/types';
-import { PlayersGrid } from './components/PlayersGrid';
+import { GameRound } from './binds/GameRound';
 
 export default () => {
   const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_HOST).toString());
@@ -56,28 +55,8 @@ export default () => {
         refreshUsers={refreshUsers}
       />;
     case GameState.Round:
-      const playersData = [
-        {
-          player: { name: 'Лиза Кудроу' } as Player,
-          status: {} as PlayerGameStatus,
-        },
-        {
-          player: { name: 'Юрий Дудь' } as Player,
-          status: {} as PlayerGameStatus,
-          isCurrent: true,
-        },
-        {
-          player: { name: 'Юрий Дудь' } as Player,
-          status: {} as PlayerGameStatus,
-        },
-        {
-          player: { name: 'Юрий Дудь' } as Player,
-          status: {} as PlayerGameStatus,
-          isOut: true,
-        },
-      ];
 
-      return <Game score={() => <>Score</>} main={() => <PlayersGrid players={playersData} />} footer={() => <RoundState round={{} as any} />} />;
+      return <Game score={() => <>Score</>} main={() => <GameRound />} footer={() => <RoundState round={{} as any} />} />;
     default:
       return <SplashScreen />;
   }

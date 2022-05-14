@@ -37,7 +37,7 @@ module.exports = {
         'sm': '0.3125rem',
         DEFAULT: '0.5rem',
         'md': '1rem',
-        'lg': '2.625rem',
+        'lg': '3rem',
       },
     },
   },

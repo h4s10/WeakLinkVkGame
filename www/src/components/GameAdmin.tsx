@@ -98,8 +98,8 @@ const GameAdmin: FunctionComponent<Props> = ({
       {
         canCreate && ['sessions', 'users'].includes(adminScreen) && <>
           <div className="ml-auto"/>
-          <TabButton active={adminScreen === 'sessions'} text='Игры' handler={() => setAdminScreen('sessions')} />
-          <TabButton active={adminScreen === 'users'} text='Игроки' handler={() => setAdminScreen('users')} />
+          <TabButton active={adminScreen === 'sessions'} handler={() => setAdminScreen('sessions')} >Игры</TabButton>
+          <TabButton active={adminScreen === 'users'} handler={() => setAdminScreen('users')}>Игроки</TabButton>
         </>
       }
     </div>
@@ -133,8 +133,8 @@ const GameAdmin: FunctionComponent<Props> = ({
         <div className='flex gap-5'>
           <h6 className="text-dark text-h6 mb-5">Игроки «{newSessionName}»</h6>
           <div className="ml-auto"/>
-          <Button className='bg-incorrect max-w-max px-10' text='Отмена' handler={abortSessionCreation}/>
-          <Button className='bg-correct max-w-max px-10' text='Создать' handler={createSession}/>
+          <Button className='bg-incorrect max-w-max px-10' handler={abortSessionCreation}>Отмена</Button>
+          <Button className='bg-correct max-w-max px-10' handler={createSession}>Создать</Button>
         </div>
 
         <div className="grid grid-cols-3 grid-rows-2">

@@ -29,10 +29,10 @@ export default (
       }
       {
         authentication === Authentication.None && <>
-          <Button className="bg-vk-blue" text="Ведущий" handler={authenticateAsAdmin} />
-          <Button className="bg-vk-blue" text="Ассистент" handler={authenticateAsAdmin} />
-          <Button className="bg-vk-magenta" text="Игрок" handler={authenticateAsPlayer} />
-          <Button className="bg-vk-magenta" text="Зритель" handler={authenticateAsPlayer} />
+          <Button className="bg-vk-blue" handler={authenticateAsAdmin}>Ведущий</Button>
+          <Button className="bg-vk-blue" handler={authenticateAsAdmin}>Ассистент</Button>
+          <Button className="bg-vk-magenta" handler={authenticateAsPlayer}>Игрок</Button>
+          <Button className="bg-vk-magenta" handler={authenticateAsPlayer}>Зритель</Button>
         </>
       }
     </div>

@@ -1,13 +1,14 @@
 import React, { FC } from 'react';
 import cn from 'classnames';
 
-import { Player, PlayerGameStatus, PlayerReputation } from '../../lib/types';
-import Avatar from '../../../assets/avatar.svg';
+import { Player, PlayerGameStatus} from '../../lib/types';
+import Avatar from '../../../assets/avatarSmall.svg';
 import SmileyCorrect from '../../../assets/smileyCorrect.svg';
 import SmileyIncorrect from '../../../assets/smileyIncorrect.svg';
 import SmileyBank from '../../../assets/smileyBank.svg';
 
 import './player.css';
+import { PlayerReputation } from '../../lib/constants';
 
 interface Props {
   player: Player;
@@ -24,7 +25,7 @@ const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut 
   };
 
   const cls = cn(
-    'flex flex-col w-full h-full rounded-md p-[1rem] 2xl:p-[1.5rem] relative',
+    'flex flex-col w-full h-full rounded-md p-[1rem] 2xl:p-[1.5rem] relative cursor-pointer transition transition-shadow duration-300 ease-in-out',
     {
       'bg-white text-black': !isOut,
       'bg-dark text-muted out': isOut,
@@ -58,7 +59,7 @@ const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut 
       </div>
     </div>
     {isOut ? <div className="absolute transition duration-500 ease-in" style={{
-      zIndex: 1000,
+      zIndex: 10,
       top: position.top + '%',
       left: position.left + '%',
       transform: `scale(3) rotate(${position.rotation}deg)`,

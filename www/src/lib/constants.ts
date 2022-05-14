@@ -20,3 +20,15 @@ export enum Authentication {
   Pending = 'Pending',
   Authenticated = 'Authenticated',
 }
+
+export enum PlayerReputation {
+  BankSaver = 'bank-saver', // Больше всего положил в банк
+  Wasserman = 'wasserman', // Больше всего правильных ответов
+  Blondy = 'blondy' // Больше всего неправильных ответов
+}
+
+export enum QuestionVerdict {
+  correct = 'correct',
+  incorrect = 'incorrect',
+  bank = 'bank'
+}
