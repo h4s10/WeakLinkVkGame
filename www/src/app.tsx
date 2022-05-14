@@ -10,7 +10,6 @@ import AuthenticationForm from './components/AuthenticationForm';
 import { useStore } from 'effector-react';
 import SplashScreen from './components/SplashScreen';
 import Game from './components/Game';
-import { PlayerCard } from './components/PlayerCard';
 import { RoundState } from './components/RoundState';
 import GameAdmin from './components/GameAdmin';
 
@@ -18,6 +17,8 @@ import { HubConnectionState } from '@microsoft/signalr';
 import { availableSessions, createSession, joinSession, refreshAvailable as refreshSessions } from './lib/store/session';
 import { ClientTask, SERVER_HOST, SIGNAL_R_HUB } from './lib/api';
 import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
+import { Player, PlayerGameStatus } from './lib/types';
+import { PlayersGrid } from './components/PlayersGrid';
 
 export default () => {
   const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_HOST).toString());
@@ -47,25 +48,36 @@ export default () => {
       return <GameAdmin
         canCreate={role === Role.Admin}
         sessions={sessions}
-        refreshSessions={ () => refreshSessions()}
+        refreshSessions={() => refreshSessions()}
         selectSession={joinSession}
-        createNewSession={ createSession }
-        users={ users }
-        createUser={ createUser }
-        refreshUsers={ refreshUsers }
+        createNewSession={createSession}
+        users={users}
+        createUser={createUser}
+        refreshUsers={refreshUsers}
       />;
     case GameState.Round:
-      function List() {
-        return <div className="grid grid-cols-3 gap-6 w-full h-full">
-          <div className="basis-1/4"><PlayerCard player={{ name: 'Лиза Кудроу' } as any} playerStatus={{} as any} /></div>
-          <div className="basis-1/4"><PlayerCard player={{ name: 'Лиза Кудроу' } as any} playerStatus={{} as any} isOut={true} /></div>
-          <div className="basis-1/4"><PlayerCard player={{ name: 'Лиза Кудроу' } as any} playerStatus={{} as any} /></div>
-          <div className="basis-1/4"><PlayerCard player={{ name: 'Лиза Кудроу' } as any} playerStatus={{} as any} isCurrent={true} /></div>
-          <div className="basis-1/4"><PlayerCard player={{ name: 'Лиза Кудроу' } as any} playerStatus={{} as any} /></div>
-        </div>;
-      }
+      const playersData = [
+        {
+          player: { name: 'Лиза Кудроу' } as Player,
+          status: {} as PlayerGameStatus,
+        },
+        {
+          player: { name: 'Юрий Дудь' } as Player,
+          status: {} as PlayerGameStatus,
+          isCurrent: true,
+        },
+        {
+          player: { name: 'Юрий Дудь' } as Player,
+          status: {} as PlayerGameStatus,
+        },
+        {
+          player: { name: 'Юрий Дудь' } as Player,
+          status: {} as PlayerGameStatus,
+          isOut: true,
+        },
+      ];
 
-      return <Game score={() => <>Score</>} main={() => List()} footer={() => <RoundState round={{} as any} />} />;
+      return <Game score={() => <>Score</>} main={() => <PlayersGrid players={playersData} />} footer={() => <RoundState round={{} as any} />} />;
     default:
       return <SplashScreen />;
   }

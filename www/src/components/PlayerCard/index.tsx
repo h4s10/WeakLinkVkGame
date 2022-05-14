@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useRef } from 'react';
+import React, { FC } from 'react';
 import cn from 'classnames';
 
 import { Player, PlayerGameStatus, PlayerReputation } from '../../lib/types';
@@ -17,27 +17,11 @@ interface Props {
 }
 
 const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut = false }) => {
-  const ref = useRef(null);
-
-  const renderOut = useMemo(() => {
-    if (!isOut || !ref.current) {
-      return;
-    }
-    const bcr = ref.current.getBoundingClientRect();
-
-    const position = {
-      top: Math.random() * (bcr.height - 100 - 100) + 100,
-      left: Math.random() * (bcr.width - 100 - 100) + 100,
-      rotation: (Math.random() * (45 + 45) - 45),
-    };
-
-    return <div className="absolute transition duration-500 ease-in" style={{
-      zIndex: 1000,
-      top: position.top + 'px',
-      left: position.left + 'px',
-      transform: `scale(3) rotate(${position.rotation}deg)`,
-    }}><SmileyIncorrect /></div>;
-  }, [ref.current]);
+  const position = {
+    top: Math.random() * (90 - 10 - 10) + 10,
+    left: Math.random() * (90 - 10 - 10) + 10,
+    rotation: (Math.random() * (45 + 45) - 45),
+  };
 
   const cls = cn(
     'flex flex-col w-full h-full rounded-md p-[1rem] 2xl:p-[1.5rem] relative',
@@ -50,7 +34,7 @@ const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut 
 
   const { statuses = {} } = playerStatus;
 
-  return <div className={cls} ref={ref}>
+  return <div className={cls}>
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
       <div className="flex-none mr-4"><Avatar /></div>
       <div className="flex-1 text-h7 2xl:text-h6 truncate">{player.name}</div>
@@ -73,7 +57,12 @@ const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut 
         <div className="text-h8 pt-2 leading-[1.2rem]">положил в банк</div>
       </div>
     </div>
-    {renderOut}
+    {isOut ? <div className="absolute transition duration-500 ease-in" style={{
+      zIndex: 1000,
+      top: position.top + '%',
+      left: position.left + '%',
+      transform: `scale(3) rotate(${position.rotation}deg)`,
+    }}><SmileyIncorrect /></div> : null}
   </div>;
 };
 
