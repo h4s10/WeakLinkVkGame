@@ -18,6 +18,7 @@ import { availableSessions, createSession, joinSession, refreshAvailable as refr
 import { ClientTask, SERVER_HOST, SIGNAL_R_HUB } from './lib/api';
 import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
 import { GameRound } from './binds/GameRound';
+import { Score } from './components/Score';
 
 export default () => {
   const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_HOST).toString());
@@ -56,7 +57,7 @@ export default () => {
       />;
     case GameState.Round:
 
-      return <Game score={() => <>Score</>} main={() => <GameRound role={role} />} footer={() => <RoundState round={{} as any} />} />;
+      return <Game score={() => <Score power={2} />} main={() => <GameRound role={role} />} footer={() => <RoundState round={{} as any} />} />;
     default:
       return <SplashScreen />;
   }
