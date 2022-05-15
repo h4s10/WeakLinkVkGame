@@ -20,7 +20,7 @@ public class QuestionParser : IQuestionParser
                 if (line.StartsWith('(')) //ignore question level
                     continue;
                 
-                question.Text += "\n" + line;
+                question.Text += "  \n" + line;
                 if (index + 1 <= lines.Length && answerRegex.IsMatch(lines[index + 1]))
                     isNewQuestion = false;
                 continue;

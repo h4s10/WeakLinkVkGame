@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Utils.Extensions;
 using WeakLinkGame.API.Interfaces;
 using WeakLinkGame.DataAccessLayer;
 using WeakLinkGame.DataAccessLayer.Dictionaries;
@@ -48,7 +49,8 @@ public class GameHub : Hub<IGameClient>
             .Include(x => x.User)
             .ThenInclude(x => x.Questions)
             .ToListAsync();
-        await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse(session.Id,
+        round.CurrentUserId = userRounds.First().Id;
+        await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse(session.Id, round.Id, (int) round.CurrentUserId,
             userRounds.Select(x => new UserRoundDto()
             {
                 BankSum = x.BankSum,
@@ -60,48 +62,7 @@ public class GameHub : Hub<IGameClient>
             }))
         );
     }
-/*
-    public async Task JoinSession(int idSession)
-    {
-        var session = await _context.Sessions.FindAsync(idSession);
-        if (session is null)
-        {
-            _logger.LogError("Session {SessionId} not found", idSession);
-            return;
-        }
-
-        if (session.CurrentRoundId is null)
-        {
-            var round = new Round(session.Id);
-            await _context.Rounds.AddAsync(round);
-            await _context.SaveChangesAsync();
-
-            session.CurrentRoundId = round.Id;
-            _context.Sessions.Update(session);
-            await _context.SaveChangesAsync();
-        }
-
-        var userRounds = request.UserIds.Select(x => new UserRound(round.Id, x));
-        await _context.UserRounds.AddRangeAsync(userRounds);
-        await _context.SaveChangesAsync();
-
-        userRounds = await _context.UserRounds.Where(x => x.RoundId == round.Id)
-            .Include(x => x.User)
-            .ThenInclude(x => x.Questions)
-            .ToListAsync();
-        await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse(session.Id,
-            userRounds.Select(x => new UserRoundDto()
-            {
-                BankSum = x.BankSum,
-                Id = x.UserId,
-                IsWeak = x.IsWeak,
-                Name = x.User.Name,
-                PassCount = x.User.Questions?.Count(question => question.State == QuestionState.Passed) ?? 0,
-                RightCount = x.User.Questions?.Count(question => question.State == QuestionState.Answered) ?? 0
-            }))
-        );
-    }*/
-
+    
     public async Task EndRound(int roundId, int weakUserId)
     {
         var round = await _context.Rounds.Include(x => x.UserRounds).FirstOrDefaultAsync(x => x.Id == roundId);
@@ -142,6 +103,8 @@ public class GameHub : Hub<IGameClient>
             return;
         }
 
+        var round = await _context.Rounds.FindAsync(request.RoundId);
+
         //Кладем в банк
         if (request.IsBank)
         {
@@ -152,12 +115,14 @@ public class GameHub : Hub<IGameClient>
             }
 
             userRound.BankSum += (int) request.BankSum;
+            round.RightAnswerChainCount = 0;
             _context.UserRounds.Update(userRound);
             await _context.SaveChangesAsync();
             return;
         }
 
         //Отвечаем на вопрос
+        var userRounds = await _context.UserRounds.Where(x => x.RoundId == request.RoundId).ToListAsync();
         var question = await _context.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == request.QuestionId);
         if (question is null)
         {
@@ -171,14 +136,22 @@ public class GameHub : Hub<IGameClient>
             _logger.LogError("Answer {AnswerId} not found", request.AnswerId);
             return;
         }
-        
+
         if (answer.IsCorrect)
+        {
             userRound.RightScore += 1;
+            round.RightAnswerChainCount++;
+        }
         else
+        {
             userRound.WrongScore += 1;
+            round.RightAnswerChainCount = 0;
+        }
+
         _context.UserRounds.Update(userRound);
+        _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
-        await GetQuestion();
+        await GetQuestion(userRounds.GetNext(userRound).UserId, round.RightAnswerChainCount);
     }
 
     public async Task GetSessionState(int idSession)
@@ -209,7 +182,7 @@ public class GameHub : Hub<IGameClient>
             return;
         }
         
-        await Clients.All.SendRoundState(new SendRoundStateResponse(round.SessionId,
+        await Clients.All.SendRoundState(new SendRoundStateResponse(round.SessionId, roundId, round.CurrentUserId,
             userRounds.Select(x => new UserRoundDto()
             {
                 BankSum = x.BankSum,
@@ -235,7 +208,7 @@ public class GameHub : Hub<IGameClient>
         round.State = RoundState.Started;
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
-        await GetQuestion();
+        await GetQuestion((int) round.CurrentUserId, 0);
     }
 
     public async Task CreateRound(int sessionId)
@@ -257,7 +230,7 @@ public class GameHub : Hub<IGameClient>
         await StartRound(round.Id);
     }
 
-    public async Task GetQuestion()
+    public async Task GetQuestion(int currentUserId, int rightAnswersCount)
     {
         var question = await _context.Questions.Where(x => x.State == QuestionState.New)
             .Include(x => x.Answers)
@@ -268,7 +241,7 @@ public class GameHub : Hub<IGameClient>
             return;
         }
 
-        await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, question.Answers!.Select(x => new AnswerDto()
+        await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, question.Answers!.Select(x => new AnswerDto()
         {
             Id = x.Id,
             IsCorrect = x.IsCorrect,

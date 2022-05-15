@@ -21,11 +21,19 @@ public class WLGDbDataContext : DbContext
     {
         modelBuilder.Entity<User>()
             .HasIndex(x => x.Name).IsUnique();
+        modelBuilder.Entity<User>()
+            .HasOne(x => x.CurrentRound)
+            .WithOne(x => x.CurrentUser)
+            .HasForeignKey<Round>(x => x.CurrentUserId);
         
         modelBuilder.Entity<Round>()
             .HasOne(x => x.Session)
             .WithMany(x => x.Rounds)
             .HasForeignKey(x => x.SessionId);
+        modelBuilder.Entity<Round>()
+            .HasOne(x => x.CurrentUser)
+            .WithOne(x => x.CurrentRound)
+            .HasForeignKey<User>(x => x.CurrentRoundId);
         
         modelBuilder.Entity<Session>()
             .HasOne(x => x.CurrentRound)
