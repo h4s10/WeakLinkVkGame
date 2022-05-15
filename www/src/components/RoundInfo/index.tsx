@@ -3,9 +3,6 @@ import Timer from '../Timer';
 import { Timestamp } from '../../lib/types';
 import { formatTime } from '../../utils/time';
 
-import WalletOutline from '../../../assets/walletOutline.svg';
-import StopwatchOutline from '../../../assets/stopwatchOutline.svg';
-
 interface Props {
   name: string,
   bank: number,
@@ -17,14 +14,12 @@ const RoundInfo: FC<Props> = ({ name, bank, endsAt, running = false }) => {
   const timeLeft = endsAt - Date.now();
 
   return <div className="flex h-full">
-    <div className="relative basis-1/4 flex flex-col justify-center items-center bg-gray border border-white/70 text-white rounded">
-      <div className="absolute left-1 top-2 scale-[3] opacity-60"><WalletOutline/></div>
+    <div className="relative basis-1/4 flex flex-col justify-center items-center bg-gray text-white rounded">
       <div className="text-h7 2xl:text-h6">Банк</div>
       <div className="text-h5 2xl:text-h4 -mt-3 2xl:-mt-6">{bank}</div>
     </div>
     <div className="flex-1 flex justify-center items-center text-h5 2xl:text-h4">{name}</div>
-    <div className="relative basis-1/4 flex flex-col justify-center items-center bg-gray border border-white/70 text-white rounded">
-      <div className="absolute -right-1 top-1 scale-[3] opacity-60"><StopwatchOutline/></div>
+    <div className="relative basis-1/4 flex flex-col justify-center items-center bg-gray text-white rounded">
       <div className="text-h7 2xl:text-h6">Время</div>
       <div className="text-h5 2xl:text-h4 -mt-3 2xl:-mt-6">
         { running ? <Timer ms={timeLeft} /> : formatTime(timeLeft) }
