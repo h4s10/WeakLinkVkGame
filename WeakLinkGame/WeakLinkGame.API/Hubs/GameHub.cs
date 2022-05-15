@@ -104,7 +104,6 @@ public class GameHub : Hub<IGameClient>
         }
 
         var round = await _context.Rounds.FindAsync(request.RoundId);
-
         //Кладем в банк
         if (request.IsBank)
         {
@@ -130,24 +129,36 @@ public class GameHub : Hub<IGameClient>
             return;
         }
 
-        var answer = question.Answers!.FirstOrDefault(x => x.Id == request.AnswerId);
-        if (answer is null)
+        if (!request.IsPass)
         {
-            _logger.LogError("Answer {AnswerId} not found", request.AnswerId);
-            return;
-        }
+            var answer = question.Answers!.FirstOrDefault(x => x.Id == request.AnswerId);
+            if (answer is null)
+            {
+                _logger.LogError("Answer {AnswerId} not found", request.AnswerId);
+                return;
+            }
 
-        if (answer.IsCorrect)
-        {
-            userRound.RightScore += 1;
-            round.RightAnswerChainCount++;
+            if (answer.IsCorrect)
+            {
+                userRound.RightScore += 1;
+                round.RightAnswerChainCount++;
+            }
+            else
+            {
+                userRound.WrongScore += 1;
+                round.RightAnswerChainCount = 0;
+            }
+
+            question.State = QuestionState.Answered;
         }
         else
         {
             userRound.WrongScore += 1;
             round.RightAnswerChainCount = 0;
+            question.State = QuestionState.Passed;
         }
 
+        _context.Questions.Update(question);
         _context.UserRounds.Update(userRound);
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();

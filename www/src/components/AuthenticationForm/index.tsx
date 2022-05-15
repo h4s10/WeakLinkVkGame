@@ -2,8 +2,9 @@ import React, { useCallback } from 'react';
 
 import { Authentication, Role } from '../../lib/constants';
 import Page from '../Page';
-import Button from '../Button';
 import Throbber from '../Throbber';
+import VkLogo from '../../../assets/vk.svg';
+import Pattern from '../../../assets/splashPattern.svg';
 
 export default (
   {
@@ -22,19 +23,21 @@ export default (
   }
 
   return <Page>
-    <h1 className="text-h4 mb-2">Авторизация</h1>
-    <div className="flex w-full gap-2 my-auto align-middle items-center rounded bg-white place-content-evenly p-10 min-h-[32rem]">
+    <Pattern className="absolute r-0 t-0 -z-10"/>
+    <div className="text-h4 mb-2 flex items-center gap-12"><VkLogo />cлабое звено</div>
+    <div className="flex flex-col gap-2 p-10 min-h-[32rem] mt-20 w-fit">
       {
-        (authentication === Authentication.Pending) && <div className="h-20"><Throbber/></div>
+        (authentication === Authentication.Pending) && <div className="h-20 m-l-[50%]"><Throbber/></div>
       }
       {
         authentication === Authentication.None && <>
-          <Button className="bg-vk-blue" handler={authenticateAsAdmin}>Ведущий</Button>
-          <Button className="bg-vk-blue" handler={authenticateAsAdmin}>Ассистент</Button>
-          <Button className="bg-vk-magenta" handler={authenticateAsPlayer}>Игрок</Button>
-          <Button className="bg-vk-magenta" handler={authenticateAsPlayer}>Зритель</Button>
+          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsAdmin}>Ведущий</div>
+          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsAdmin}>Ассистент</div>
+          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsPlayer}>Игрок</div>
+          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsPlayer}>Зритель</div>
         </>
       }
     </div>
+
   </Page>
 }

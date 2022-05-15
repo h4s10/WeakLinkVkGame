@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     colors: {
       'vk-blue': '#0077FF',
+      'vk-blue-accent': '#28436E',
       'vk-magenta': '#FF0084',
 
       'white': '#fff',
@@ -39,7 +40,12 @@ module.exports = {
         'md': '1rem',
         'lg': '3rem',
       },
+      transitionProperty: {
+        'spacing': 'margin, padding',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };

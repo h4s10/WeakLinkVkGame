@@ -7,6 +7,7 @@ import { QuestionCard } from '../../components/QuestionCard';
 import { PlayersGrid } from '../../components/PlayersGrid';
 
 interface Props {
+  role: Role
 }
 
 function findFirstQuestion(questions: Question[]) {
@@ -67,14 +68,14 @@ const playersData = [
   },
 ];
 
-const GameRound: FC<Props> = () => {
+const GameRound: FC<Props> = ({role}) => {
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
 
   return <>
     {currentQuestion ? <div className="absolute inset-0 z-[100]">
       <QuestionCard
-        question={currentQuestion} player={currentPlayer} role={Role.Admin}
+        question={currentQuestion} player={currentPlayer} role={role}
         onVerdict={(value) => {
           console.log('On onVerdict', value);
           currentQuestion.is = true;
@@ -87,10 +88,10 @@ const GameRound: FC<Props> = () => {
         }}
       />
     </div> : null}
-    <PlayersGrid players={playersData} currentPlayer={currentPlayer} onPlayerClick={(player) => {
+    {!currentQuestion ? <PlayersGrid players={playersData} currentPlayer={currentPlayer} onPlayerClick={(player) => {
       setCurrentPlayer(player);
       setCurrentQuestion(findFirstQuestion(questionsData));
-    }} />
+    }} /> : null }
   </>;
 };
 
