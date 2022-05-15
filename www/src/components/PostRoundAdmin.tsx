@@ -60,19 +60,25 @@ const PostRoundAdmin: FunctionComponent = () => {
       <h2>{`В банке ${bank} очков!`} </h2>
 
       <Button handler={() => setShowEntryPopup(false)}>К статистике и голосованию</Button>
-    </Page>
+    </Page>;
   }
 
   return <Page>
-    <div className='flex gap-5'>
-      <h1 className="text-h4 mb-2">Статистика</h1>
-      <Tabs> {
-        rounds.map(round => <TabButton key={round} active={round === displayedRound} handler={() => setDisplayedRound(displayedRound)} >round @{round}</TabButton>)
-      } </Tabs>
+    <div className="flex flex-col h-full box-content">
+      <div className="flex gap-5 items-center justify-between">
+        <h1 className="text-h5 2xl:text-h4 mb-2">Статистика</h1>
+        <Tabs> {
+          rounds.map(round => <TabButton key={round} active={round === displayedRound} handler={() => setDisplayedRound(displayedRound)}>Раунд #{round}</TabButton>)
+        } </Tabs>
+      </div>
+      <div className="py-6">
+        <PlayersGrid players={players} currentPlayer={currentPlayer} weakPlayer={weakId} onPlayerClick={onPlayerClick} />
+      </div>
+      {weakUser && <div>
+        <Button className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name} – Слабое звено!</Button>
+      </div>}
     </div>
-    <PlayersGrid players={players} currentPlayer={currentPlayer} weakPlayer={weakId} onPlayerClick={onPlayerClick} />
-    { weakUser && <Button className="bg-vk-blue" handler={onRoundEndClick}>{ weakUser.name } – Слабое звено!</Button> }
-  </Page>
-}
+  </Page>;
+};
 
 export default PostRoundAdmin;
