@@ -24,7 +24,7 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
       <div className="flex-none mr-12"><Avatar /></div>
       <div className="flex-1 text-h5 2xl:text-h4 leading-[5rem] truncate">Отвечает <span className="font-bold">{player.name}</span></div>
-      <div className="flex-none cursor-pointer" onClick={() => onClose() }><Cancel /></div>
+      <div className="flex-none cursor-pointer" onClick={() => onClose()}><Cancel /></div>
     </div>
     <hr />
     <div className="flex-1 pt-[1.5rem] 2xl:pt-[2.75rem] flex gap-2 flex-col justify-around">
@@ -38,9 +38,9 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
       </div>
       {answers.length > 1 ? <div className="flex gap-4">
         {answers.map(((answer) =>
-            <Button className={cn('flex-1 bg-muted text-vk-blue rounded-md', {
-              'shadow shadow-correct border border-correct': answer.isCorrect
-            })} key={answer.id} handler={() => {}}>
+            <Button className={cn('text-h7 2xl:text-h6 p-2 px-6 flex-1 bg-muted text-vk-blue rounded-md relative text-center', {
+              'shadow shadow-correct border border-correct': role === Role.Admin && answer.isCorrect,
+            })} ignoreInnerStyle={true} key={answer.id} handler={() => {}}>
               <ReactMarkdown>{answer.text}</ReactMarkdown>
             </Button>
         ))}

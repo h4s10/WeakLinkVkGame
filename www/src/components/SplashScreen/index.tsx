@@ -11,7 +11,7 @@ const SplashScreen: FunctionComponent<{ caption?: string, content?: ReactNode }>
     <Smileys className={`absolute ${ !content ? 'left-[47%] top-[33%]' : 'left-[60%] top-[20%]' }`}/>
     {
       !content &&
-      <h1 className="text-h1 leading-none left-20 top-[45%] absolute max-w-[40%]"> { caption } </h1>
+      <h1 className="text-h3 2xl:text-h1 leading-none left-20 top-[45%] absolute max-w-[40%]"> { caption } </h1>
     }
     {
       content &&

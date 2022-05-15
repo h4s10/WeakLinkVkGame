@@ -74,13 +74,13 @@ export default () => {
 
     case GameState.ReadyToPlay:
       return role === Role.Admin ? <Page>
-        <h4 className="text-h4">Готовы начинать раунд «{roundName}»?</h4>
+        <h4 className="text-h6 2xl:text-h4 mb-5">Готовы начинать раунд «{roundName}»?</h4>
         {/*<div className="flex">*/}
         {/*  <h5 className="text-h5">Время:</h5>*/}
         {/*  <input type="number" className="text-dark" value={2} /> m*/}
         {/*  <input type="number" className="text-dark" value={30} /> s*/}
         {/*</div>*/}
-        <Button className="bg-vk-blue" handler={() => startRound(currentRound.getState())}>Начинаем</Button>
+        <Button className="bg-vk-blue rounded" handler={() => startRound(currentRound.getState())}>Начинаем</Button>
       </Page> : <SplashScreen caption={roundName} />
     case GameState.Round:
       switch (roundState) {
