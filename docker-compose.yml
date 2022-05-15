@@ -1,0 +1,14 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./WeakLinkGame
+      dockerfile: ./WeakLinkGame.API/Dockerfile
+    container_name: weak-link-back
+    volumes:
+      - ./db:/app/db/
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Release
+    ports:
+      - '7089:7089'
+    restart: unless-stopped

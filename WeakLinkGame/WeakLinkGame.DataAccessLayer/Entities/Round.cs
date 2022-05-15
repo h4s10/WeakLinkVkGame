@@ -1,3 +1,5 @@
+using WeakLinkGame.DataAccessLayer.Dictionaries;
+
 namespace WeakLinkGame.DataAccessLayer.Entities;
 
 public class Round
@@ -9,7 +11,7 @@ public class Round
     
     public int Id { get; set; }
     public DateTime? StartTime { get; set; }
-
+    public RoundState State { get; set; } = RoundState.New;
     public int SessionId { get; set; }
     public Session Session { get; set; }
     

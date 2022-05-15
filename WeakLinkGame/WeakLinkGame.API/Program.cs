@@ -6,7 +6,12 @@ using WeakLinkGame.API.Services;
 using ILogger = Serilog.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
-var dbPath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetSection("DbFilePath").Value);
+var dbPath = string.Empty;
+#if DEBUG
+    dbPath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, builder.Configuration.GetSection("DbFilePath").Value);
+#else
+    dbPath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "db/" + builder.Configuration.GetSection("DbFilePath").Value);
+#endif
 builder.Services.AddDbContext<WLGDbDataContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 builder.Logging.ClearProviders();

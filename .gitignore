@@ -37,3 +37,4 @@ node_modules/
 www/dist/
 /.idea/cssdialects.xml
 /.idea/vcs.xml
+db/**
