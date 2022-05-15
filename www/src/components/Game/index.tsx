@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import type { FunctionComponent } from 'react';
 import Page from '../Page';
 
 import './game.css';
 
 interface Props {
-  score: () => JSX.Element,
-  main: () => JSX.Element,
-  footer: () => JSX.Element,
+  score: () => ReactNode,
+  main: () => ReactNode,
+  footer: () => ReactNode,
 }
 
 const Game: FunctionComponent<Props> = ({ score, footer, main }) => {

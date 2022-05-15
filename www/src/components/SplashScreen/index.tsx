@@ -16,7 +16,7 @@ const SplashScreen: FunctionComponent<{ caption?: string, content?: ReactNode }>
     {
       content &&
       <div className="absolute left-20 my-[15rem] max-w-[60%]">
-        { caption && <h2 className="text-h2 leading-none">{ caption }</h2> }
+        { caption && <h2 className="text-h4 2xl:text-h2 leading-none">{ caption }</h2> }
         { content && <div className="pt-10">{ content }</div> }
       </div>
     }

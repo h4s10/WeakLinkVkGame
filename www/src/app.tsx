@@ -29,7 +29,7 @@ export default () => {
   const users = useStore(usersStore);
 
   if (connectionError) {
-    return <SplashScreen caption="Мы самое слабое звено" content={<div className="text-h4 font-mono">{connectionError.toString()}</div>} />;
+    return <SplashScreen caption="Мы самое слабое звено" content={<div className="text-h5 2xl:text-h4 font-mono">{connectionError.toString()}</div>} />;
   }
 
   if (connectionState !== HubConnectionState.Connected) {

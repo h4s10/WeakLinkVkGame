@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { ReactNode, useCallback } from 'react';
 import type { FunctionComponent, MouseEventHandler } from 'react';
 import cn from 'classnames';
 import './button.css';
@@ -6,7 +6,7 @@ import './button.css';
 export interface Props {
   className?: string,
   handler: () => void,
-  children: JSX.Element | string,
+  children: ReactNode,
 }
 
 const Button: FunctionComponent<Props> = ({ children, className, handler }) => {
