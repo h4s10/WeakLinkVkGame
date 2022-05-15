@@ -31,10 +31,10 @@ export default (
       }
       {
         authentication === Authentication.None && <>
-          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsAdmin}>Ведущий</div>
-          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsAdmin}>Ассистент</div>
-          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsPlayer}>Игрок</div>
-          <div className="!justify-start text-h4 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsPlayer}>Зритель</div>
+          <div className="!justify-start text-h6 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsAdmin}>Ведущий</div>
+          <div className="!justify-start text-h6 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsAdmin}>Ассистент</div>
+          <div className="!justify-start text-h6 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsPlayer}>Игрок</div>
+          <div className="!justify-start text-h6 2xl:text-h5 text-ellipsis cursor-pointer select-none box-content hover:pl-20 py-5 transition-all hover:border-b-2 border-white" onClick={authenticateAsPlayer}>Зритель</div>
         </>
       }
     </div>
