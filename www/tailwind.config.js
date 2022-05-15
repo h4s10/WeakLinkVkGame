@@ -39,7 +39,12 @@ module.exports = {
         'md': '1rem',
         'lg': '3rem',
       },
+      transitionProperty: {
+        'spacing': 'margin, padding',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };

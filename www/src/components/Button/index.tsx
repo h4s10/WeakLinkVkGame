@@ -5,18 +5,20 @@ import './button.css';
 
 export interface Props {
   className?: string,
+  ignoreInnerStyle?: boolean;
   handler: () => void,
   children: ReactNode,
 }
 
-const Button: FunctionComponent<Props> = ({ children, className, handler }) => {
+const Button: FunctionComponent<Props> = ({ children, className, ignoreInnerStyle = false, handler }) => {
   const onClick: MouseEventHandler = useCallback((event) => {
     event.preventDefault();
     handler();
   }, [handler]);
 
-  const defaultClassName = 'h-[4rem] leading-[3.7rem] 2xl:h-[6.25rem] 2xl:leading-[5.6rem] text-h7 2xl:text-h6 w-full text-ellipsis overflow-hidden text-center cursor-pointer select-none transition-shadow hover:shadow-md';
-  return <div className={cn(defaultClassName, className)} onClick={onClick}><span>{children}</span></div>;
+  const defaultSizing = 'h-[4rem] 2xl:h-[6.25rem] text-h7 2xl:text-h6 w-full';
+  const defaultClassName = 'flex items-center justify-center text-ellipsis overflow-hidden text-center cursor-pointer select-none transition-shadow hover:shadow-md box-content';
+  return <div className={cn(!ignoreInnerStyle && defaultSizing, defaultClassName,className)} onClick={onClick}><span>{children}</span></div>;
 };
 
 export default Button;
