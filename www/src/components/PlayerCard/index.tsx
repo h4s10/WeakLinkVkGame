@@ -1,23 +1,21 @@
 import React, { FC } from 'react';
 import cn from 'classnames';
 
-import { Player, PlayerGameStatus} from '../../lib/types';
 import Avatar from '../../../assets/avatarSmall.svg';
 import SmileyCorrect from '../../../assets/smileyCorrect.svg';
 import SmileyIncorrect from '../../../assets/smileyIncorrect.svg';
 import SmileyBank from '../../../assets/smileyBank.svg';
+import { UserRound } from '../../lib/api';
 
 import './player.css';
-import { PlayerReputation } from '../../lib/constants';
 
 interface Props {
-  player: Player;
-  playerStatus: PlayerGameStatus;
+  player: UserRound;
   isCurrent?: boolean;
   isOut?: boolean;
 }
 
-const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut = false }) => {
+const PlayerCard: FC<Props> = ({ player, isCurrent = false, isOut = false }) => {
   const position = {
     top: Math.random() * (90 - 10 - 10) + 10,
     left: Math.random() * (90 - 10 - 10) + 10,
@@ -33,8 +31,6 @@ const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut 
     },
   );
 
-  const { statuses = {} } = playerStatus;
-
   return <div className={cls}>
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
       <div className="flex-none mr-4"><Avatar /></div>
@@ -44,17 +40,17 @@ const PlayerCard: FC<Props> = ({ player, playerStatus, isCurrent = false, isOut 
     <div className="flex-1 flex flex-wrap pt-[1.5rem] 2xl:pt-[2.75rem] content-around">
       <div className="flex flex-row flex-nowrap basis-1/2">
         <div className="mr-4"><SmileyCorrect /></div>
-        <div className="text-h5 font-bold mr-2">{statuses[PlayerReputation.Wasserman] || '-'}</div>
+        <div className="text-h5 font-bold mr-2">{player.rightCount || '-'}</div>
         <div className="text-h8 pt-2 leading-[1.2rem]">правильных ответов</div>
       </div>
       <div className="flex flex-row flex-nowrap basis-1/2">
         <div className="mr-4"><SmileyIncorrect /></div>
-        <div className="text-h5 font-bold mr-2">{statuses[PlayerReputation.Blondy] || '-'}</div>
+        <div className="text-h5 font-bold mr-2">{player.passCount || '-'}</div>
         <div className="text-h8 pt-2 leading-[1.2rem]">неверных ответов</div>
       </div>
       <div className="flex flex-row flex-nowrap basis-1/2">
         <div className="mr-4"><SmileyBank /></div>
-        <div className="text-h5 font-bold mr-2">{statuses[PlayerReputation.BankSaver] || '-'}</div>
+        <div className="text-h5 font-bold mr-2">{player.bankSum || '-'}</div>
         <div className="text-h8 pt-2 leading-[1.2rem]">положил в банк</div>
       </div>
     </div>

@@ -25,13 +25,11 @@ const Timer: FC<Props> = ({ ms }) => {
     return <span>-</span>;
   }
 
-  const construct = formatTime(left);
-
   return (
     <span className={cn({
       'animate-ping': left === 0,
     })}>
-      {construct.hours ? construct.hours + ':' : ''}{construct.minutes}:{construct.seconds}
+      {formatTime(left)}
     </span>
   );
 };

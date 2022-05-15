@@ -6,6 +6,7 @@ import Button from './Button';
 import Input from './Input';
 import TabButton from './TabButton';
 import List from './List';
+import { USERS_PER_SESSION } from '../lib/settings';
 
 interface Props {
   canCreate: boolean,
@@ -17,8 +18,6 @@ interface Props {
   createUser: (name: string) => Promise<void>,
   refreshUsers: () => Promise<any>,
 }
-
-const MAX_USERS_PER_SESSION = 6;
 
 const GameAdmin: FunctionComponent<Props> = ({
    canCreate,
@@ -54,7 +53,7 @@ const GameAdmin: FunctionComponent<Props> = ({
 
   const addUserToNewSession = useCallback((user: User) => {
     if (
-      newSessionUsers.length >= MAX_USERS_PER_SESSION ||
+      newSessionUsers.length >= USERS_PER_SESSION ||
       newSessionUsers.find(existing => user.id === existing.id)
     ) {
       return;

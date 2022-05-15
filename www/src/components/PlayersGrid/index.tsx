@@ -1,22 +1,19 @@
 import React, { FC } from 'react';
-import { Player, PlayerGameStatus } from '../../lib/types';
 import { PlayerCard } from '../PlayerCard';
+import { User, UserRound } from '../../lib/api';
 
 interface Props {
-  players: {
-    player: Player,
-    status: PlayerGameStatus,
-    isOut?: boolean,
-  }[],
-  currentPlayer?: Player,
-  onPlayerClick: (player: Player) => void;
+  players: UserRound[],
+  currentPlayer?: User['id'],
+  weakPlayer?: User['id'],
+  onPlayerClick: (player: User['id']) => void;
 }
 
-const PlayersGrid: FC<Props> = ({ players = [], currentPlayer, onPlayerClick }) => {
+const PlayersGrid: FC<Props> = ({ players = [], currentPlayer, weakPlayer, onPlayerClick }) => {
   return <div className="grid grid-cols-3 gap-6 w-full h-full">
-    {players.map(({ player, status, isOut }, idx) =>
-      <div key={player.id || idx} className="basis-1/4" onClick={() => !isOut && onPlayerClick(player)}>
-        <PlayerCard player={player} playerStatus={status} isCurrent={currentPlayer === player} isOut={isOut} />
+    {players.map((player) =>
+      <div key={player.id} className="basis-1/4" onClick={() => !player.isWeak && onPlayerClick(player.id)}>
+        <PlayerCard player={player} isCurrent={currentPlayer === player.id} isOut={weakPlayer === player.id || player.isWeak} />
       </div>)}
   </div>;
 };

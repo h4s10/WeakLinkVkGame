@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { HubConnection } from '@microsoft/signalr';
 import { HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
+import { createEvent } from 'effector-logger';
 
 let instance: HubConnection | null = null;
 
@@ -39,6 +40,7 @@ export const useConnection = (url): [HubConnection, HubConnectionState, Error] =
 
     setConnectionInstance(connection.current);
     updateConnectionState();
+    connectionEstablished();
 
     connection.current.start()
       .then(
@@ -58,6 +60,8 @@ export const useConnection = (url): [HubConnection, HubConnectionState, Error] =
 
   return [connection.current, state, error];
 }
+
+export const connectionEstablished = createEvent('Connection established');
 
 (window as any).debug = {
   ...(window as any).debug ?? {},

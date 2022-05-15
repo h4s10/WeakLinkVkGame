@@ -1,15 +1,12 @@
 import { pad2 } from './string';
 import { Milliseconds } from '../lib/types';
 
-export function formatTime(time: Milliseconds) {
+export function formatTime(time: Milliseconds): string {
   const seconds = time / 1000;
   const minutes = Math.floor(seconds / 60);
 
   if (minutes < 1) {
-    return {
-      minutes: '0',
-      seconds: pad2(Math.floor(seconds)),
-    };
+    return ['0', pad2(Math.floor(seconds))].join(':');
   }
 
   const hours = Math.floor(minutes / 60);
@@ -17,15 +14,12 @@ export function formatTime(time: Milliseconds) {
   const remainMinutes = minutes % 60;
 
   if (hours < 1) {
-    return {
-      minutes: remainMinutes.toString(10),
-      seconds: pad2(remainSeconds),
-    };
+    return [remainMinutes.toString(10), pad2(remainSeconds)].join(':')
   }
 
-  return {
-    hours: hours.toString(10),
-    minutes: pad2(remainMinutes),
-    seconds: pad2(remainSeconds),
-  };
+  return [
+    hours.toString(10),
+    pad2(remainMinutes),
+    pad2(remainSeconds),
+  ].join(':');
 }

@@ -1,7 +1,5 @@
 import { Role } from './constants';
-
-export const SERVER_HOST = 'http://localhost:7089';
-export const SIGNAL_R_HUB = '/game';
+import { SERVER_HOST } from './settings';
 
 // События/методы которые бэк вызывает у клиента
 // См /WeakLinkGame/WeakLinkGame.API/Interfaces/IGameClient.cs
@@ -16,13 +14,14 @@ export enum ClientTask {
 export enum ServerTask {
   Join = 'Join',
   Leave = 'Leave',
-  JoinSession = 'JoinSession',
   CreateSession = 'CreateSession',
   GetSessionState = 'GetSessionState',
   GetRoundState = 'GetRoundState',
-  StartRound = 'StartRound',
   CreateRound = 'CreateRound',
+  StartRound = 'StartRound',
+  EndRound = 'EndRound',
   GetQuestion = 'GetQuestion',
+  AnswerQuestion = 'AnswerQuestion',
 }
 
 export enum RestTask {
@@ -50,17 +49,47 @@ export interface User {
   role: Role,
 }
 
-export interface UserRound {
-  Name: string,
-  Id: number,
-  PassCount: number,
-  RightCount: number,
-  BankSum: number,
-  IsWeak: boolean,
+export interface Round {
+  id: number,
 }
 
-export interface RoundStateResponse {
-  Users: UserRound[],
+export interface UserRound {
+  name: string,
+  id: number,
+  passCount: number,
+  rightCount: number,
+  bankSum: number,
+  isWeak: boolean,
+}
+
+export interface RoundState {
+  sessionId: Session['id'],
+  roundId: Round['id'],
+  currentUserId: User['id'],
+  users: UserRound[],
+}
+
+export interface Answer {
+  id: number,
+  text: string,
+  isCorrect: boolean
+}
+
+export interface Question {
+  id: number,
+  text: string,
+  currentUserId: User['id'],
+  rightAnswersCount: number,
+  answers: Answer[],
+}
+
+export interface AnswerQuestionRequest {
+  isBank: boolean,
+  bankSum?: number,
+  questionId?: Question['id'],
+  answerId?: Answer['id'],
+  userId: User['id'],
+  roundId: Round['id'],
 }
 
 export const request = async <Response extends unknown, Payload extends unknown> (method: 'GET' | 'POST', task: RestTask, body?: Payload): Promise<Response> => {
