@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     colors: {
       'vk-blue': '#0077FF',
+      'vk-blue-accent': '#28436E',
       'vk-magenta': '#FF0084',
 
       'white': '#fff',

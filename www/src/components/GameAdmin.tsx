@@ -1,13 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import type { FunctionComponent } from 'react';
+
 import { Session, User } from '../lib/api';
+import { pad2 } from '../utils/string';
+
 import Page from './Page';
 import Button from './Button';
 import Input from './Input';
 import List from './List';
 import { Tabs } from './Tabs/Tabs';
 import { TabButton } from './Tabs/TabButton';
-import { pad2 } from '../utils/string';
+
+import ChevronLeft from '../../assets/chevronLeftOutline.svg';
 
 interface Props {
   canCreate: boolean,
@@ -118,7 +122,7 @@ const GameAdmin: FunctionComponent<Props> = (
 
   return <Page>
     <div className="flex gap-5 justify-between items-center">
-      <h1 className="text-h4 mb-2">{getTitle(adminScreen)}</h1>
+      <div className="text-h4 mb-2 flex gap-6 items-center"><a href="/" className="cursor-pointer"><ChevronLeft /></a> {getTitle(adminScreen)}</div>
       {
         canCreate && ['sessions', 'sessionUsers', 'users'].includes(adminScreen) && <Tabs>
           <>
@@ -132,7 +136,7 @@ const GameAdmin: FunctionComponent<Props> = (
       {/* Создание игры */}
       {(!canCreate || adminScreen === 'sessions') && <>
         {
-          canCreate && <div className="p-8 bg-white/70 rounded-md text-dark shadow border border-white mb-5">
+          canCreate && <div className="p-8 bg-white/40 rounded-md shadow border border-white/70 mb-5">
             <h6 className="text-h6">Новая игра</h6>
             <Input buttonText="Создать" submit={startSessionCreation} />
           </div>
@@ -156,20 +160,20 @@ const GameAdmin: FunctionComponent<Props> = (
         <div className="flex gap-5 mb-5">
           <h6 className="text-h6 mb-5">Игроки «{newSessionName}»</h6>
           <div className="ml-auto" />
-          <Button className="hover:border-incorrect hover:text-incorrect border-4 max-w-max px-10 rounded" handler={abortSessionCreation}>Отмена</Button>
+          <Button className="hover:border-incorrect hover:text-incorrect border-none max-w-max px-10 rounded" handler={abortSessionCreation}>Отмена</Button>
           <Button className="bg-vk-blue max-w-max px-10 rounded" handler={createSession}>Создать игру</Button>
         </div>
 
         <div className="grid grid-cols-3 grid-rows-2 gap-4 mb-5">
-          {newSessionUsers.map((user, idx) => <div key={user.id} className="flex flex-col rounded-md border-4 bg-white text-dark shadow justify-between p-8 bg-white/70 border border-white overflow-hidden">
-            <div className="text-h6 2xl:text-h5 text-center relative">
+          {newSessionUsers.map((user, idx) => <div key={user.id} className="flex flex-col rounded-md border-2 text-dark shadow justify-between p-8 bg-white/40 border border-white/60 overflow-hidden">
+            <div className="text-h6 2xl:text-h5 text-center relative text-white">
               <div className="absolute left-0 top-0 text-h3 text-white/60 -z-10 -translate-x-[40%] -translate-y-[50%]">{pad2(idx+1)}</div>
               {user.name}
             </div>
             <div className="flex items pt-8">
-              <button className="w-1/3 h-10 text-3xl leading-5 hover:shadow" onClick={() => moveUserLeft(user)}>◀</button>
-              <button className="w-1/3 h-10 text-3xl leading-5 hover:shadow" onClick={() => removeUserFromNewSession(user)}>✕</button>
-              <button className="w-1/3 h-10 text-3xl leading-5 hover:shadow" onClick={() => moveUserRight(user)}>▶</button>
+              <button className="w-1/3 h-16 text-3xl leading-5 shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all" onClick={() => moveUserLeft(user)}>◀</button>
+              <button className="w-1/3 h-16 text-3xl leading-5 shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all" onClick={() => removeUserFromNewSession(user)}>✕</button>
+              <button className="w-1/3 h-16 text-3xl leading-5 shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all" onClick={() => moveUserRight(user)}>▶</button>
             </div>
           </div>)}
         </div>
@@ -186,7 +190,7 @@ const GameAdmin: FunctionComponent<Props> = (
 
       {/* Редактирование игроков */}
       {canCreate && adminScreen === 'users' && <>
-        <div className="p-8 rounded-md text-dark shadow bg-white/70 border border-white mb-5">
+        <div className="p-8 rounded-md shadow bg-white/40 border border-white mb-5">
           <h6 className="text-h6">Добавить игрока</h6>
           <Input buttonText="Добавить" submit={createUser} />
         </div>
