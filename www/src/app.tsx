@@ -56,7 +56,7 @@ export default () => {
       />;
     case GameState.Round:
 
-      return <Game score={() => <>Score</>} main={() => <GameRound />} footer={() => <RoundState round={{} as any} />} />;
+      return <Game score={() => <>Score</>} main={() => <GameRound role={role} />} footer={() => <RoundState round={{} as any} />} />;
     default:
       return <SplashScreen />;
   }
