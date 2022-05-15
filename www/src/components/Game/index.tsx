@@ -6,12 +6,11 @@ import './game.css';
 import { useStore } from 'effector-react';
 import { role as roleStore } from '../../lib/store/auth';
 import { currentRound as currentRoundStore, roundName as roundNameStore, roundState as roundStateStore } from '../../lib/store/round';
-import { bank as bankStore, stake as stakeStore, players as playersStore, question as questionStore, saveBank, answerQuestion } from '../../lib/store/game';
+import { bank as bankStore, chain as chainStore, stake as stakeStore, players as playersStore, question as questionStore, saveBank, answerQuestion } from '../../lib/store/game';
 import { QuestionVerdict, RoundState } from '../../lib/constants';
 import { RoundInfo } from '../RoundInfo';
 import { QuestionCard } from '../QuestionCard';
-
-const Score = ({ stake }) => <div>На кону {stake}, за правильный ответ удвоится</div>
+import { Score } from '../Score';
 
 const Game: FunctionComponent = () => {
   const currentRound = useStore(currentRoundStore);
@@ -19,6 +18,7 @@ const Game: FunctionComponent = () => {
   const roundState = useStore(roundStateStore);
   const roundName = useStore(roundNameStore);
   const bank = useStore(bankStore);
+  const chain = useStore(chainStore);
   const stake = useStore(stakeStore);
   const question = useStore(questionStore);
   const players = useStore(playersStore);
@@ -51,7 +51,7 @@ const Game: FunctionComponent = () => {
   return <Page>
     <div className="Game grid grid-rows-5 grid-cols-7 content-between gap-2 h-full relative">
       <div className="row-span-4 col-span-1 relative">
-        <Score stake={stake}/>
+        <Score power={chain}/>
       </div>
       <div className="row-span-4 col-span-6 relative">
         <QuestionCard

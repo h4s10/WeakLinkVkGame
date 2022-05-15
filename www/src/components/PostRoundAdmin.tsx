@@ -11,8 +11,9 @@ import {
 import { bank as bankStore, currentPlayer as currentPlayerStore, players as playersStore, stake as stakeStore } from '../lib/store/game';
 import Button from './Button';
 import { PlayersGrid } from './PlayersGrid';
-import TabButton from './TabButton';
 import { User } from '../lib/api';
+import { TabButton } from './Tabs/TabButton';
+import { Tabs } from './Tabs/Tabs';
 
 const PostRoundAdmin: FunctionComponent = () => {
   const currentRound = useStore(currentRoundStore);
@@ -65,8 +66,9 @@ const PostRoundAdmin: FunctionComponent = () => {
   return <Page>
     <div className='flex gap-5'>
       <h1 className="text-h4 mb-2">Статистика</h1>
-      <div className="ml-auto"/>
-      { rounds.map(round => <TabButton key={round} active={round === displayedRound} handler={() => setDisplayedRound(displayedRound)} >round @{round}</TabButton>)}
+      <Tabs> {
+        rounds.map(round => <TabButton key={round} active={round === displayedRound} handler={() => setDisplayedRound(displayedRound)} >round @{round}</TabButton>)
+      } </Tabs>
     </div>
     <PlayersGrid players={players} currentPlayer={currentPlayer} weakPlayer={weakId} onPlayerClick={onPlayerClick} />
     { weakUser && <Button className="bg-vk-blue" handler={onRoundEndClick}>{ weakUser.name } – Слабое звено!</Button> }
