@@ -149,8 +149,8 @@ const GameAdmin: FunctionComponent<Props> = (
           itemKey={({ id }) => id}
           serialize={({ name }) => name}
           emptyList={!canCreate && !sessions.length && <div className="flex gap-5 flex-col items-center text-center content-center">
-            <h4 className="text-h4 text-dark">Нет доступных игр.</h4>
-            <h4 className="text-h6 text-dark">Дождитесь когда Ведущий создаст игру.</h4>
+            <h4 className="text-h4">Нет доступных игр.</h4>
+            <h4 className="text-h6">Дождитесь когда Ведущий создаст игру.</h4>
           </div>}
         />
       </>}
