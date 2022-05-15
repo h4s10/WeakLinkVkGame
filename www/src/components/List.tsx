@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { Key } from 'react';
-import Button from './components/Button';
-import Throbber from './components/Throbber';
+import Button from './Button';
+import Throbber from './Throbber';
 
 export interface Props<T> {
   header: string,

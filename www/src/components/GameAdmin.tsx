@@ -5,7 +5,7 @@ import Page from './Page';
 import Button from './Button';
 import Input from './Input';
 import TabButton from './TabButton';
-import List from '../List';
+import List from './List';
 
 interface Props {
   canCreate: boolean,
@@ -46,6 +46,9 @@ const GameAdmin: FunctionComponent<Props> = ({
   }, []);
 
   const createSession = useCallback(() => {
+    if (!newSessionName || !newSessionUsers.length) {
+      return;
+    }
     createNewSession({ name: newSessionName, users: newSessionUsers.map(({id}) => id) });
   }, [createNewSession, newSessionName, newSessionUsers]);
 
@@ -109,7 +112,7 @@ const GameAdmin: FunctionComponent<Props> = ({
         {
           canCreate && <>
             <h6 className="text-dark text-h6 mb-5">Новая игра</h6>
-            <Input buttonText="Добавить" handler={startSessionCreation}/>
+            <Input buttonText="Выбрать игроков" handler={startSessionCreation}/>
           </>
         }
         <List<Session>
@@ -134,7 +137,7 @@ const GameAdmin: FunctionComponent<Props> = ({
           <h6 className="text-dark text-h6 mb-5">Игроки «{newSessionName}»</h6>
           <div className="ml-auto"/>
           <Button className='bg-incorrect max-w-max px-10' handler={abortSessionCreation}>Отмена</Button>
-          <Button className='bg-correct max-w-max px-10' handler={createSession}>Создать</Button>
+          <Button className='bg-correct max-w-max px-10' handler={createSession}>Создать игру</Button>
         </div>
 
         <div className="grid grid-cols-3 grid-rows-2">
@@ -148,6 +151,8 @@ const GameAdmin: FunctionComponent<Props> = ({
           </div>) }
         </div>
 
+        {/*<h6 className="text-dark text-h6 mb-5">Добавить игрока</h6>*/}
+        {/*<Input buttonText="Добавить" handler={createUser}/>*/}
         <List<User>
           header="Все игроки"
           items={users}

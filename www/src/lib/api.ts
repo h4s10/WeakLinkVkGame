@@ -8,6 +8,7 @@ export const SIGNAL_R_HUB = '/game';
 export enum ClientTask {
   SendRoundState = 'SendRoundState',
   SendSessionState = 'SendSessionState',
+  SendQuestion = 'SendQuestion',
 }
 
 // События/методы которые клиенты вызывает у сервера

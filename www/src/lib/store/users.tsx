@@ -1,5 +1,5 @@
 import { createEffect, createStore } from 'effector-logger';
-import { request, RestTask, User } from '../api';
+import { CreateUserRequest, request, RestTask, User } from '../api';
 
 export const users = createStore<User[]>([], {
   name: 'Known users',
@@ -13,7 +13,7 @@ export const refresh = createEffect({
 
 export const create = createEffect({
   name: 'Create user',
-  handler: (name: string) => request<void, { Name: string }>('POST', RestTask.Users, { Name: name }),
+  handler: (name: string) => request<void, CreateUserRequest>('POST', RestTask.Users, { Name: name }),
 })
 
 users.on(refresh.doneData, (prevUsers, newUsers) => newUsers);
