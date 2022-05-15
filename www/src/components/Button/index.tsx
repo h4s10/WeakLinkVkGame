@@ -16,8 +16,8 @@ const Button: FunctionComponent<Props> = ({ children, className, ignoreInnerStyl
     handler();
   }, [handler]);
 
-  const defaultSizing = 'h-[4rem] 2xl:h-[6.25rem] text-h7 2xl:text-h6 w-full';
-  const defaultClassName = 'flex items-center justify-center text-ellipsis overflow-hidden cursor-pointer select-none transition-shadow';
+  const defaultSizing = 'h-[4rem] 2xl:h-[6.25rem] text-h8 2xl:text-h6 w-full';
+  const defaultClassName = 'flex items-center justify-center text-ellipsis overflow-hidden cursor-pointer select-none transition-shadow text-center';
   return <div className={cn(!ignoreInnerStyle && defaultSizing, defaultClassName, className)} onClick={onClick}><span>{children}</span></div>;
 };
 
