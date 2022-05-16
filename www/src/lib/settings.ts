@@ -1,4 +1,4 @@
-export const SERVER_HOST = 'http://localhost:7089';
+export const SERVER_HOST = 'http://192.168.88.16:7089';
 export const SIGNAL_R_HUB = '/game';
 
 export const USERS_PER_SESSION = 6;

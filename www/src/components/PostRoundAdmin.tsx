@@ -53,13 +53,17 @@ const PostRoundAdmin: FunctionComponent = () => {
 
   if (showEntryPopup) {
     return <Page>
-      <h1>«{roundName}» окончен</h1>
-      <h2>{roundEndReason === 'bank' && 'Достигли максимального количества очков!'} </h2>
-      <h2>{roundEndReason === 'time' && 'Время вышло!'} </h2>
-      <h2>{stake === 0 ? 'Успели положить все очки в банк' : `Не успели положить ${stake} очков в банк`}</h2>
-      <h2>{`В банке ${bank} очков!`} </h2>
+      <img className="absolute inset-0 -z-10" src="../../assets/splashPattern.svg" />
+      <div className="flex flex-col h-full w-full justify-between">
+        <div className="text-h4 2xl:text-h3 mb-5">«{roundName}» окончен</div>
+        <div className="text-h5 2xl:text-h4">{roundEndReason === 'bank' && 'Достигли максимального количества очков!'} </div>
+        <div className="ttext-h5 2xl:ext-h4">{roundEndReason === 'time' && 'Время вышло!'} </div>
+        {stake === 0 ? <div className="text-h5 2xl:text-h4 mt-10">Успели положить все очки в банк</div> :
+          <div className="text-h5 2xl:text-h4 mt-10"> Не успели положить <span className="text-incorrect">{stake}</span> очков в банк</div>}
+        <div className="text-h5 2xl:text-h3">В банке <span className="text-neutral font-bold">{bank}</span> очков!</div>
 
-      <Button handler={() => setShowEntryPopup(false)}>К статистике и голосованию</Button>
+        <Button className="bg-muted rounded text-vk-blue" handler={() => setShowEntryPopup(false)}>К статистике и голосованию</Button>
+      </div>
     </Page>;
   }
 
@@ -75,7 +79,7 @@ const PostRoundAdmin: FunctionComponent = () => {
         <PlayersGrid players={players} currentPlayer={currentPlayer} weakPlayer={weakId} onPlayerClick={onPlayerClick} />
       </div>
       {weakUser && <div>
-        <Button className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name} – Слабое звено!</Button>
+        <Button className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name}, <span className="text-muted/70">Вы - Слабое звено! Прощайте!</span></Button>
       </div>}
     </div>
   </Page>;

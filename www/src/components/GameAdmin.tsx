@@ -12,6 +12,9 @@ import { Tabs } from './Tabs/Tabs';
 import { TabButton } from './Tabs/TabButton';
 
 import ChevronLeft from '../../assets/chevronLeftOutline.svg';
+import CancelIcon from '../../assets/cancel.svg';
+import ChevronLeftIcon from '../../assets/chevronLeft.svg';
+import ChevronRightIcon from '../../assets/chevronRight.svg';
 import { USERS_PER_SESSION } from '../lib/settings';
 
 interface Props {
@@ -167,12 +170,12 @@ const GameAdmin: FunctionComponent<Props> = (
           {newSessionUsers.map((user, idx) => <div key={user.id} className="flex flex-col rounded-md border-2 text-dark shadow justify-between p-8 bg-white/40 border border-white/60 overflow-hidden">
             <div className="text-h6 2xl:text-h5 text-center relative text-white">
               <div className="absolute left-0 top-0 text-h3 text-white/60 -z-10 -translate-x-[40%] -translate-y-[50%]">{pad2(idx+1)}</div>
-              {user.name}
+              <span className="text-stroke">{user.name}</span>
             </div>
             <div className="flex items pt-8">
-              <button className="w-1/3 h-16 text-3xl leading-5 shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all" onClick={() => moveUserLeft(user)}>◀</button>
-              <button className="w-1/3 h-16 text-3xl leading-5 shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all" onClick={() => removeUserFromNewSession(user)}>✕</button>
-              <button className="w-1/3 h-16 text-3xl leading-5 shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all" onClick={() => moveUserRight(user)}>▶</button>
+              <button className="w-1/3 h-16 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center" onClick={() => moveUserLeft(user)}><ChevronLeftIcon /></button>
+              <button className="w-1/3 h-16 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center" onClick={() => removeUserFromNewSession(user)}><CancelIcon /></button>
+              <button className="w-1/3 h-16 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center" onClick={() => moveUserRight(user)}><ChevronRightIcon /></button>
             </div>
           </div>)}
         </div>
@@ -180,6 +183,7 @@ const GameAdmin: FunctionComponent<Props> = (
         <List<User>
           header="Все игроки"
           items={users}
+          selected={newSessionUsers}
           refresh={refreshUsers}
           select={addUserToNewSession}
           itemKey={({ id }) => id}

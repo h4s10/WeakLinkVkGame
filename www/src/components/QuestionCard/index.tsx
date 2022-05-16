@@ -20,7 +20,7 @@ interface Props {
 
 const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose }) => {
   const { text = '', answers = [] } = question;
-  return <div className="flex flex-col bg-white text-black rounded-md w-full h-full p-[3.125rem]">
+  return <div className="relative flex flex-col bg-white text-black rounded-md w-full h-full p-[3.125rem] z-10">
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
       <div className="flex-none mr-12"><Avatar /></div>
       <div className="flex-1 text-h5 2xl:text-h4 leading-[5rem] truncate">Отвечает <span className="font-bold">{player.name}</span></div>

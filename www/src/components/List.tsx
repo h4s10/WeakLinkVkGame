@@ -4,10 +4,12 @@ import Button from './Button';
 import Throbber from './Throbber';
 import Sync from '../../assets/syncOutline.svg';
 import Input from './Input';
+import cn from 'classnames';
 
 export interface Props<T> {
   header: string,
   items: T[],
+  selected?: T[],
   emptyList?: ReactNode,
 
   refresh(): Promise<unknown>,
@@ -16,7 +18,7 @@ export interface Props<T> {
   serialize(v: T): string,
 }
 
-const List = <T extends any>({ header, items, refresh, serialize, itemKey, select, emptyList = null }: Props<T>) => {
+const List = <T extends any>({ header, items, selected = [], refresh, serialize, itemKey, select, emptyList = null }: Props<T>) => {
   const [refreshing, setRefreshing] = useState(true);
   const [filter, setFilter] = useState('');
 
@@ -62,7 +64,9 @@ const List = <T extends any>({ header, items, refresh, serialize, itemKey, selec
         <div className="overscroll-y-scroll flex flex-wrap place-content-between gap-5 mt-10">
           {
             items.filter(item => !filter.length || serialize(item).toLowerCase().includes(filter.toLowerCase())).map(item =>
-              <Button className="px-20 rounded bg-white/70 border border-white w-1/3 hover:bg-white text-black" key={itemKey(item)} handler={() => select(item)}>{serialize(item)}</Button>,
+              <Button className={cn('px-20 rounded bg-white/70 border border-white w-1/3 hover:bg-white text-black', {
+                '!bg-white border-2 border-vk-blue shadow-lg': selected.includes(item),
+              })} key={itemKey(item)} handler={() => select(item)}>{serialize(item)}</Button>,
             )
           }
         </div>

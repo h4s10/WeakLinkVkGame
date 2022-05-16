@@ -43,9 +43,9 @@ const Input: FunctionComponent<Props> = ({ submit, change, buttonText }) => {
   return <form className="flex flex-row place-content-between gap-10" onSubmit={onSubmit}>
     <div className="group relative w-full h-full">
       <div className="bg-white absolute h-3 2xl:h-4 rounded inset-x-0 bottom-3 2xl:bottom-4 -z-10" />
-      <input type="text" className="form-input w-full h-full border-0 text-h5 2xl:text-h4 p-3 appearance-none bg-transparent text-center text-white caret-white" ref={elementRef}
+      <input type="text" className="form-input text-stroke w-full h-full border-0 text-h5 2xl:text-h4 p-3 appearance-none bg-transparent text-center text-white caret-white" ref={elementRef}
              onChange={() => {handlerInput();}}
-             style={{ 'background': 'transparent', 'WebkitTextFillColor': 'white', 'WebkitTextStroke': '0.3rem white', 'textShadow': '#000 0px 4px 5px' }} />
+             style={{ 'background': 'transparent', 'WebkitTextFillColor': 'white', 'WebkitTextStroke': '0.3rem white' }} />
       <input type="text"
              className="absolute inset-0 pointer-events-none form-input w-full h-full border-0 text-h5 2xl:text-h4 p-3 appearance-none bg-transparent text-center text-vk-blue"
              disabled={true} value={input} style={{ 'background': 'transparent' }} />

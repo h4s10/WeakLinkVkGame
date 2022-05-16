@@ -7,6 +7,6 @@ export interface Props {
 }
 
 const Page: FunctionComponent<Props> = ({ children }) =>
-  <div className="Page w-full h-full mx-auto">{children}</div>;
+  <div className="Page w-full h-full">{children}</div>;
 
 export default Page;

@@ -15,3 +15,7 @@ body {
   src: url(assets/fonts/VK_Sans_Display_Medium.woff2) format('woff2'),
   url(assets/fonts/VK_Sans_Display_Medium.woff) format('woff');
 }
+
+.text-stroke {
+  text-shadow: rgba(0, 119, 255, 0.7) 2px 2px 0;
+}
