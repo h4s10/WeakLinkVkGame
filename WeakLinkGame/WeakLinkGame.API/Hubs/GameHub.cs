@@ -88,6 +88,7 @@ public class GameHub : Hub<IGameClient>
         userRound.IsWeak = true;
         _context.UserRounds.Update(userRound);
         await _context.SaveChangesAsync();
+        await GetSessionState(round.SessionId);
     }
 
     public async Task AnswerQuestion(AnswerQuestionRequest request)
@@ -236,6 +237,7 @@ public class GameHub : Hub<IGameClient>
         session.CurrentRoundId = round.Id;
         _context.Sessions.Update(session);
         await _context.SaveChangesAsync();
+        await GetSessionState(sessionId);
         await StartRound(round.Id);
     }
 
