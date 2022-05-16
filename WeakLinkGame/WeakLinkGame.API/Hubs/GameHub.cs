@@ -52,7 +52,7 @@ public class GameHub : Hub<IGameClient>
         round.CurrentUserId = userRounds.First().Id;
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
-        await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse(session.Id, round.Id, (int) round.CurrentUserId,
+        await Clients.All.SendRoundState(new SendRoundStateResponse(session.Id, round.Id, (int) round.CurrentUserId,
             userRounds.Select(x => new UserRoundDto()
             {
                 BankSum = x.BankSum,
@@ -92,7 +92,7 @@ public class GameHub : Hub<IGameClient>
 
     public async Task AnswerQuestion(AnswerQuestionRequest request)
     {
-        if (!request.IsBank && (request.AnswerId is null || request.QuestionId is null))
+        if (!request.IsBank && request.QuestionId is null)
         {
             _logger.LogError("Wrong parameters!");
             return;
@@ -120,6 +120,7 @@ public class GameHub : Hub<IGameClient>
             _context.UserRounds.Update(userRound);
             _context.Rounds.Update(round);
             await _context.SaveChangesAsync();
+            await GetQuestion((int) round.CurrentUserId!, round.RightAnswerChainCount);
             return;
         }
 
@@ -135,14 +136,7 @@ public class GameHub : Hub<IGameClient>
         question.UserId = request.UserId;
         if (!request.IsPass)
         {
-            var answer = question.Answers!.FirstOrDefault(x => x.Id == request.AnswerId);
-            if (answer is null)
-            {
-                _logger.LogError("Answer {AnswerId} not found", request.AnswerId);
-                return;
-            }
-
-            if (answer.IsCorrect)
+            if (request.IsCorrect)
             {
                 userRound.RightScore += 1;
                 round.RightAnswerChainCount++;
