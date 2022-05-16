@@ -262,4 +262,19 @@ public class GameHub : Hub<IGameClient>
             Text = x.Text,
         })));
     }
+
+    public async Task ChangeCurrentUser(int userId, int roundId)
+    {
+        var round = await _context.Rounds.FindAsync(roundId);
+        if (round is null)
+        {
+            _logger.LogError("Round {RoundId} not found", roundId);
+            return;
+        }
+
+        round.CurrentUserId = userId;
+        _context.Rounds.Update(round);
+        await _context.SaveChangesAsync();
+        await GetQuestion(userId, round.RightAnswerChainCount);
+    }
 }
