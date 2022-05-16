@@ -118,6 +118,7 @@ public class GameHub : Hub<IGameClient>
             userRound.BankSum += (int) request.BankSum;
             round.RightAnswerChainCount = 0;
             _context.UserRounds.Update(userRound);
+            _context.Rounds.Update(round);
             await _context.SaveChangesAsync();
             return;
         }
@@ -131,6 +132,7 @@ public class GameHub : Hub<IGameClient>
             return;
         }
 
+        question.UserId = request.UserId;
         if (!request.IsPass)
         {
             var answer = question.Answers!.FirstOrDefault(x => x.Id == request.AnswerId);
