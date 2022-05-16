@@ -50,6 +50,8 @@ public class GameHub : Hub<IGameClient>
             .ThenInclude(x => x.Questions)
             .ToListAsync();
         round.CurrentUserId = userRounds.First().Id;
+        _context.Rounds.Update(round);
+        await _context.SaveChangesAsync();
         await Clients.Group(UserGroup.Player).SendRoundState(new SendRoundStateResponse(session.Id, round.Id, (int) round.CurrentUserId,
             userRounds.Select(x => new UserRoundDto()
             {
