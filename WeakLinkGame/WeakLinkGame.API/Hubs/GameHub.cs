@@ -246,9 +246,12 @@ public class GameHub : Hub<IGameClient>
         var question = await _context.Questions.Where(x => x.State == QuestionState.New)
             .Include(x => x.Answers)
             .FirstOrDefaultAsync();
+        
         if (question is null)
         {
-            _logger.LogError("No available questions in DB with state New");
+            var errorText = "No available questions in DB with state New";
+            _logger.LogError(errorText);
+            await Clients.All.Error(errorText);
             return;
         }
 
