@@ -15,6 +15,11 @@ import { User } from '../lib/api';
 import { TabButton } from './Tabs/TabButton';
 import { Tabs } from './Tabs/Tabs';
 
+const pluralizeScore = (score) => ({
+    one: 'очко',
+    few: 'очка',
+}[new Intl.PluralRules('ru').select(score)] ?? 'очков' ) ;
+
 const PostRoundAdmin: FunctionComponent = () => {
   const currentRound = useStore(currentRoundStore);
   const rounds = useStore(roundsStore);
@@ -57,10 +62,11 @@ const PostRoundAdmin: FunctionComponent = () => {
       <div className="flex flex-col h-full w-full justify-between">
         <div className="text-h4 2xl:text-h3 mb-5">«{roundName}» окончен</div>
         <div className="text-h5 2xl:text-h4">{roundEndReason === 'bank' && 'Достигли максимального количества очков!'} </div>
-        <div className="ttext-h5 2xl:ext-h4">{roundEndReason === 'time' && 'Время вышло!'} </div>
+        <div className="text-h5 2xl:ext-h4">{roundEndReason === 'time' && 'Время вышло!'} </div>
+        <div className="text-h5 2xl:ext-h4">{roundEndReason === 'noMoreQuestions' && 'Закончились вопросы!'} </div>
         {stake === 0 ? <div className="text-h5 2xl:text-h4 mt-10">Успели положить все очки в банк</div> :
-          <div className="text-h5 2xl:text-h4 mt-10"> Не успели положить <span className="text-incorrect">{stake}</span> очков в банк</div>}
-        <div className="text-h5 2xl:text-h3">В банке <span className="text-neutral font-bold">{bank}</span> очков!</div>
+          <div className="text-h5 2xl:text-h4 mt-10"> Не успели положить <span className="text-incorrect">{stake}</span> {pluralizeScore(stake)} в банк</div>}
+        <div className="text-h5 2xl:text-h3">В банке <span className="text-neutral font-bold">{bank}</span> {pluralizeScore(bank)}!</div>
 
         <Button className="bg-muted rounded text-vk-blue" handler={() => setShowEntryPopup(false)}>К статистике и голосованию</Button>
       </div>

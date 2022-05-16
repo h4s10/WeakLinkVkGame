@@ -20,7 +20,7 @@ export const endRound: Effect<{ roundId: Round['id'], weakUserId: User['id'] }, 
 
 export const nextRound: Effect<{ roundId: Round['id'], weakUserId: User['id'] }, void> = createEffect('Next round');
 
-export const roundEndReason = createStore<'time' | 'bank' >(null);
+export const roundEndReason = createStore<'time' | 'bank' | 'noMoreQuestions' >(null, { name: 'Round end reason' });
 
 export const refresh: Effect<Session['id'] | void, void> = createEffect('Refresh round');
 

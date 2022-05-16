@@ -87,7 +87,7 @@ export interface AnswerQuestionRequest {
   isBank: boolean,
   bankSum?: number,
   questionId?: Question['id'],
-  answerId?: Answer['id'],
+  isCorrect: boolean,
   userId: User['id'],
   roundId: Round['id'],
 }

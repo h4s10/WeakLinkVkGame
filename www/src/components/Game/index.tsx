@@ -6,7 +6,7 @@ import './game.css';
 import { useStore } from 'effector-react';
 import { role as roleStore } from '../../lib/store/auth';
 import { currentRound as currentRoundStore, roundName as roundNameStore, roundState as roundStateStore } from '../../lib/store/round';
-import { bank as bankStore, chain as chainStore, stake as stakeStore, players as playersStore, question as questionStore, saveBank, answerQuestion } from '../../lib/store/game';
+import { answerQuestion, bank as bankStore, players as playersStore, question as questionStore, saveBank, stake as stakeStore } from '../../lib/store/game';
 import { QuestionVerdict, RoundState } from '../../lib/constants';
 import { RoundInfo } from '../RoundInfo';
 import { QuestionCard } from '../QuestionCard';
@@ -18,7 +18,6 @@ const Game: FunctionComponent = () => {
   const roundState = useStore(roundStateStore);
   const roundName = useStore(roundNameStore);
   const bank = useStore(bankStore);
-  const chain = useStore(chainStore);
   const stake = useStore(stakeStore);
   const question = useStore(questionStore);
   const players = useStore(playersStore);
@@ -27,20 +26,15 @@ const Game: FunctionComponent = () => {
 
   const onVerdict = useCallback((verdict: QuestionVerdict) => {
     if (verdict === QuestionVerdict.bank) {
-      saveBank({
+      void saveBank({
         questionId: question.id,
         sum: stake,
         userId: player.id,
         roundId: currentRound,
       });
     } else {
-      const answerId = question.answers.find(answer =>
-        verdict === QuestionVerdict.correct && answer.isCorrect ||
-        verdict === QuestionVerdict.incorrect && !answer.isCorrect
-      )?.id;
-
-      answerQuestion({
-        answerId,
+      void answerQuestion({
+        isCorrect: verdict === QuestionVerdict.correct,
         questionId: question.id,
         userId: player.id,
         roundId: currentRound,
@@ -51,7 +45,7 @@ const Game: FunctionComponent = () => {
   return <Page>
     <div className="Game grid grid-rows-5 grid-cols-7 content-between gap-2 h-full relative">
       <div className="row-span-4 col-span-1 relative">
-        <Score power={chain}/>
+        <Score value={stake}/>
       </div>
       <div className="row-span-4 col-span-6 relative">
         <QuestionCard

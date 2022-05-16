@@ -30,7 +30,7 @@ gameState.on(session, (state, joinedSession) => {
 });
 
 gameState.on(roundState, (state, newRoundState) => {
-  if (state === GameState.ReadyToPlay && newRoundState === RoundState.Playing) {
+  if (state === GameState.ReadyToPlay && newRoundState !== RoundState.Unstarted) {
     return GameState.Round;
   }
 });

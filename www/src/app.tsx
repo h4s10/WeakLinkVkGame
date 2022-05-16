@@ -37,11 +37,6 @@ export default () => {
     if (!connection) {
       return;
     }
-    // for (const user of ['Лиза Кудроу', 'Илон Маск', 'Павел Дуров', 'Иван Дорн', 'Юрий Дудь', 'Билли Айлиш']) {
-    //   try {
-    //     createUser(user)
-    //   } catch (e) {}
-    // }
     for (const name of Object.keys(ClientTask)) {
       connection.on(name, (data) => console.log(name, data));
     }

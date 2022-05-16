@@ -1,12 +1,11 @@
 import { createEffect, createEvent, createStore, Effect } from 'effector-logger';
-import { Answer, AnswerQuestionRequest, Question, Round, ServerTask, User, UserRound } from '../api';
+import { AnswerQuestionRequest, Question, Round, ServerTask, User, UserRound } from '../api';
 import {
   roundUpdate as roundUpdateEvent,
   question as questionEvent,
 } from './serverEvents';
-import { QuestionVerdict } from '../constants';
 import { getConnectionInstance } from '../connection';
-import { endRound, refresh } from './round';
+import { refresh } from './round';
 import { MAX_SCORE } from '../settings';
 
 export const players = createStore<UserRound[]>([], { name: 'Round users' });
@@ -31,8 +30,7 @@ export const saveBank: Effect<{
 }, void> = createEffect('Save to bank');
 export const answerQuestion: Effect<{
   questionId: Question['id'],
-  // verdict: QuestionVerdict,
-  answerId: Answer['id'],
+  isCorrect: boolean,
   userId: User['id'],
   roundId: Round['id']
 }, void> = createEffect('Answer question');
@@ -57,11 +55,11 @@ bank.watch(value => {
   }
 })
 
-answerQuestion.use(({ answerId, questionId, userId, roundId }) =>
+answerQuestion.use(({ isCorrect, questionId, userId, roundId }) =>
   getConnectionInstance().invoke(ServerTask.AnswerQuestion, {
     isBank: false,
     questionId,
-    answerId,
+    isCorrect,
     userId,
     roundId,
   } as AnswerQuestionRequest)
