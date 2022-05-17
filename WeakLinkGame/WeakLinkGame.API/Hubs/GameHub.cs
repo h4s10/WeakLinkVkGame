@@ -233,12 +233,15 @@ public class GameHub : Hub<IGameClient>
         var previousRoundId = session.CurrentRoundId;
         var round = new Round(session.Id);
         await _context.Rounds.AddAsync(round);
+        await _context.SaveChangesAsync();
         
         if (previousRoundId is not null)
         {
-            var previousUserRounds = await _context.UserRounds.Where(x => x.RoundId == previousRoundId).ToListAsync();
+            var previousUserRounds = await _context.UserRounds.Where(x => x.RoundId == previousRoundId && !x.IsWeak).ToListAsync();
             var userRounds = previousUserRounds.Select(x => new UserRound(round.Id, x.UserId));
             await _context.UserRounds.AddRangeAsync(userRounds);
+            round.CurrentUserId = userRounds.First().UserId;
+            _context.Rounds.Update(round);
         }
 
         session.CurrentRoundId = round.Id;
@@ -276,6 +279,15 @@ public class GameHub : Hub<IGameClient>
         if (round is null)
         {
             _logger.LogError("Round {RoundId} not found", roundId);
+            return;
+        }
+
+        var user = await _context.UserRounds.FirstOrDefaultAsync(x => x.UserId == userId && x.RoundId == roundId);
+        if (user is null)
+        {
+            var errorText = "User is not found in that round";
+            _logger.LogError(errorText);
+            await Clients.All.Error(errorText);
             return;
         }
 
