@@ -39,6 +39,8 @@ public class WLGDbDataContext : DbContext
             .HasOne(x => x.CurrentRound)
             .WithOne(x => x.CurrentSession)
             .HasForeignKey<Session>(x => x.CurrentRoundId);
+        modelBuilder.Entity<Session>()
+            .HasIndex(x => x.Name).IsUnique();
         
         modelBuilder.Entity<UserRound>()
             .HasOne(x => x.User)
