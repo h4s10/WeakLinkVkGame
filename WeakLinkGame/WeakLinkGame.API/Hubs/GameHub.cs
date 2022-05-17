@@ -49,7 +49,7 @@ public class GameHub : Hub<IGameClient>
             .Include(x => x.User)
             .ThenInclude(x => x.Questions)
             .ToListAsync();
-        round.CurrentUserId = userRounds.First().Id;
+        round.CurrentUserId = userRounds.First().UserId;
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
         await Clients.All.SendRoundState(new SendRoundStateResponse(session.Id, round.Id, (int) round.CurrentUserId,
@@ -229,10 +229,17 @@ public class GameHub : Hub<IGameClient>
             _logger.LogError("Session {SessionId} not found", sessionId);
             return;
         }
-        
+
+        var previousRoundId = session.CurrentRoundId;
         var round = new Round(session.Id);
         await _context.Rounds.AddAsync(round);
-        await _context.SaveChangesAsync();
+        
+        if (previousRoundId is not null)
+        {
+            var previousUserRounds = await _context.UserRounds.Where(x => x.RoundId == previousRoundId).ToListAsync();
+            var userRounds = previousUserRounds.Select(x => new UserRound(round.Id, x.UserId));
+            await _context.UserRounds.AddRangeAsync(userRounds);
+        }
 
         session.CurrentRoundId = round.Id;
         _context.Sessions.Update(session);
