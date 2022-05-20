@@ -28,16 +28,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin", builder =>
-            builder.WithOrigins(new[] {"http://localhost:8000", "https://localhost:8000"})
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials()
-                .SetIsOriginAllowed((host) => true) //for signalr cors  
-    );
-});
+builder.Services.AddCors();
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -60,11 +51,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true) // allow any origin
+    .AllowCredentials()); // allow credentials
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors("AllowOrigin");
 app.MapHub<GameHub>("/game");
 app.Run();
