@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import cn from 'classnames';
 
-import Avatar from '../../../assets/avatarSmall.svg';
-import SmileyCorrect from '../../../assets/smileyCorrect.svg';
-import SmileyIncorrect from '../../../assets/smileyIncorrect.svg';
-import SmileyBank from '../../../assets/smileyBank.svg';
+import { ReactComponent as Avatar } from '../../../assets/avatarSmall.svg';
+import { ReactComponent as SmileyCorrect } from '../../../assets/smileyCorrect.svg';
+import { ReactComponent as SmileyIncorrect } from '../../../assets/smileyIncorrect.svg';
+import { ReactComponent as SmileyBank } from '../../../assets/smileyBank.svg';
 import { UserRound } from '../../lib/api';
 
 import './player.css';

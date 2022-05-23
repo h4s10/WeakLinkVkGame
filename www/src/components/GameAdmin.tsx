@@ -11,10 +11,10 @@ import List from './List';
 import { Tabs } from './Tabs/Tabs';
 import { TabButton } from './Tabs/TabButton';
 
-import ChevronLeft from '../../assets/chevronLeftOutline.svg';
-import CancelIcon from '../../assets/cancel.svg';
-import ChevronLeftIcon from '../../assets/chevronLeft.svg';
-import ChevronRightIcon from '../../assets/chevronRight.svg';
+import { ReactComponent as ChevronLeft } from '../../assets/chevronLeftOutline.svg';
+import { ReactComponent as CancelIcon } from '../../assets/cancel.svg';
+import { ReactComponent as ChevronLeftIcon } from '../../assets/chevronLeft.svg';
+import { ReactComponent as ChevronRightIcon } from '../../assets/chevronRight.svg';
 import { USERS_PER_SESSION } from '../lib/settings';
 
 interface Props {

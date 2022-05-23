@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import type { Key } from 'react';
 import Button from './Button';
 import Throbber from './Throbber';
-import Sync from '../../assets/syncOutline.svg';
+import { ReactComponent as Sync } from '../../assets/syncOutline.svg';
 import Input from './Input';
 import cn from 'classnames';
 

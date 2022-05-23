@@ -1,11 +1,12 @@
 import React from 'react';
 import type { ReactNode, FunctionComponent } from 'react';
-import Logo from '../../../assets/vk.svg';
-import Smileys from '../../../assets/smileysSplash.svg';
+import { ReactComponent as Logo } from '../../../assets/vk.svg';
+import { ReactComponent as Smileys } from '../../../assets/smileysSplash.svg';
+import splashPattern from '../../../assets/splashPattern.svg';
 
 const SplashScreen: FunctionComponent<{ caption?: string, content?: ReactNode }> = ({ caption = 'слабое звено', content  }) =>
   <div className="w-full h-full mx-auto bg-vk-blue">
-    <img className="absolute inset-0" src="../../../assets/splashPattern.svg" />
+    <img className="absolute inset-0" src={splashPattern} />
     <Logo className="left-20 top-20 absolute"/>
     <Smileys className={`absolute ${ !content ? 'left-[47%] top-[33%]' : 'left-[60%] top-[20%]' }`}/>
     {

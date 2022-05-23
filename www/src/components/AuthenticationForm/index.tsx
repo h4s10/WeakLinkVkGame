@@ -3,7 +3,8 @@ import React, { useCallback } from 'react';
 import { Authentication, Role } from '../../lib/constants';
 import Page from '../Page';
 import Throbber from '../Throbber';
-import VkLogo from '../../../assets/vk.svg';
+import { ReactComponent as VkLogo } from '../../../assets/vk.svg';
+import splashPattern from '../../../assets/splashPattern.svg';
 
 export default (
   {
@@ -22,7 +23,7 @@ export default (
   }
 
   return <Page>
-    <img className="absolute inset-0 -z-10" src="../../../assets/splashPattern.svg" />
+    <img className="absolute inset-0 -z-10" src={splashPattern} />
     <div className="text-h4 mb-2 flex items-center gap-12"><VkLogo />cлабое звено</div>
     <div className="flex flex-col gap-2 p-10 min-h-[32rem] mt-20 w-fit">
       {

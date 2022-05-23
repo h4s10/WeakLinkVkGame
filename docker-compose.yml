@@ -12,3 +12,15 @@ services:
     ports:
       - '7089:7089'
     restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./www
+      dockerfile: ./Dockerfile
+      args:
+        - SERVER_HOST=/
+        - SERVER_PORT=7089
+    container_name: weak-link-front
+    ports:
+      - '80:80'
+    restart: unless-stopped

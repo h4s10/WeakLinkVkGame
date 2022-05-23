@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import Page from './Page';
 import { useStore } from 'effector-react';
+import splashPattern from '../../assets/splashPattern.svg';
 import {
   currentRound as currentRoundStore,
   nextRound,
@@ -58,7 +59,7 @@ const PostRoundAdmin: FunctionComponent = () => {
 
   if (showEntryPopup) {
     return <Page>
-      <img className="absolute inset-0 -z-10" src="../../assets/splashPattern.svg" />
+      <img className="absolute inset-0 -z-10" src={splashPattern} />
       <div className="flex flex-col h-full w-full justify-between">
         <div className="text-h4 2xl:text-h3 mb-5">«{roundName}» окончен</div>
         <div className="text-h5 2xl:text-h4">{roundEndReason === 'bank' && 'Достигли максимального количества очков!'} </div>
@@ -85,7 +86,7 @@ const PostRoundAdmin: FunctionComponent = () => {
         <PlayersGrid players={players} currentPlayer={currentPlayer} weakPlayer={weakId} onPlayerClick={onPlayerClick} />
       </div>
       {weakUser && <div>
-        <Button className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name}, <span className="text-muted/70">Вы - Слабое звено! Прощайте!</span></Button>
+        <Button className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name}, <span className="text-muted/70">Вы – Слабое звено! Прощайте!</span></Button>
       </div>}
     </div>
   </Page>;

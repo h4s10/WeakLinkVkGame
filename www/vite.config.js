@@ -7,6 +7,6 @@ import svg from 'vite-plugin-svgr';
 export default defineConfig({
   plugins: [
     react(),
-    svg({ exportAsDefault: true })
+    svg()
   ]
 })

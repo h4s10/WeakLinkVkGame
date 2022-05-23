@@ -1,5 +1,5 @@
 import { Role } from './constants';
-import { SERVER_HOST } from './settings';
+import { SERVER_URL } from './settings';
 
 // События/методы которые бэк вызывает у клиента
 // См /WeakLinkGame/WeakLinkGame.API/Interfaces/IGameClient.cs
@@ -93,7 +93,7 @@ export interface AnswerQuestionRequest {
 }
 
 export const request = async <Response extends unknown, Payload extends unknown> (method: 'GET' | 'POST', task: RestTask, body?: Payload): Promise<Response> => {
-  const response = await fetch(new URL(task, SERVER_HOST).toString(), {
+  const response = await fetch(new URL(task, SERVER_URL).toString(), {
     method,
     headers: {
       'Content-Type': 'application/json',

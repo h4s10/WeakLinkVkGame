@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 import 'effector-logger/inspector';
 import './global.css';
+import splashPattern from '../assets/splashPattern.svg';
 import { useConnection } from './lib/connection';
 import { gameState as gameStateStore, nextState } from './lib/store/gameState';
 import { authenticate, authentication as authenticationStore, role as roleStore } from './lib/store/auth';
@@ -17,14 +18,14 @@ import { availableSessions, createSession, refreshAvailable as refreshSessions, 
 import { currentRound, roundName as roundNameStore, roundState as roundStateStore, startRound } from './lib/store/round';
 import { ClientTask } from './lib/api';
 import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
-import { SERVER_HOST, SIGNAL_R_HUB } from './lib/settings';
+import { SERVER_URL, SIGNAL_R_HUB } from './lib/settings';
 import Button from './components/Button';
 import Page from './components/Page';
 import PostRoundAdmin from './components/PostRoundAdmin';
 import { players as playersStore } from './lib/store/game';
 
 export default () => {
-  const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_HOST).toString());
+  const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_URL).toString());
 
   const gameState = useStore(gameStateStore);
   const role = useStore(roleStore);
@@ -45,7 +46,7 @@ export default () => {
   }, [connection]);
 
   if (connectionError) {
-    return <SplashScreen caption="Мы самое слабое звено" content={<div className="text-h5 2xl:text-h4 font-mono">{connectionError.toString()}</div>} />;
+    return <SplashScreen caption="Мы – самое слабое звено" content={<div className="text-h5 2xl:text-h4 font-mono">{connectionError.toString()}</div>} />;
   }
 
   if (connectionState !== HubConnectionState.Connected) {
@@ -72,7 +73,7 @@ export default () => {
     case GameState.ReadyToPlay:
       return role === Role.Admin ? <Page>
         <div className="flex flex-col h-full justify-between">
-          <img className="absolute inset-0 -z-10" src="../assets/splashPattern.svg" />
+          <img className="absolute inset-0 -z-10" src={splashPattern} />
           <div className="text-h4 2xl:text-h3 mb-5">Готовы начинать <p>«{roundName}»?</p></div>
           {/*<div className="flex">*/}
           {/*  <h5 className="text-h5">Время:</h5>*/}

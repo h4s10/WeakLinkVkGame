@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import { QuestionVerdict, Role } from '../../lib/constants';
-import Avatar from '../../../assets/avatarBig.svg';
-import Cancel from '../../../assets/cancelOutline.svg';
-import QMark from '../../../assets/questionMark.svg';
+import { ReactComponent as Avatar } from '../../../assets/avatarBig.svg';
+import { ReactComponent as Cancel } from '../../../assets/cancelOutline.svg';
+import { ReactComponent as QMark } from '../../../assets/questionMark.svg';
 
 import Button from '../Button';
 import cn from 'classnames';
