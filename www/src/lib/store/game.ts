@@ -1,12 +1,10 @@
 import { createEffect, createEvent, createStore, Effect } from 'effector-logger';
 import { AnswerQuestionRequest, Question, Round, ServerTask, User, UserRound } from '../api';
-import {
-  roundUpdate as roundUpdateEvent,
-  question as questionEvent,
-} from './serverEvents';
+import { question as questionEvent, roundUpdate as roundUpdateEvent } from './serverEvents';
 import { getConnectionInstance } from '../connection';
 import { refresh } from './round';
 import { MAX_SCORE } from '../settings';
+import { active as timerActive } from './timer';
 
 export const players = createStore<UserRound[]>([], { name: 'Round users' });
 export const currentPlayer = createStore<User['id']>(null, { name: 'Current user' });
@@ -53,7 +51,13 @@ bank.watch(value => {
   if (value >= MAX_SCORE) {
     bankFull();
   }
-})
+});
+
+timerActive.watch((active) => {
+  if (!active) {
+    timeIsUp();
+  }
+});
 
 answerQuestion.use(({ isCorrect, questionId, userId, roundId }) =>
   getConnectionInstance().invoke(ServerTask.AnswerQuestion, {

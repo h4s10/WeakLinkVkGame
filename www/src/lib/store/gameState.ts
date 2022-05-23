@@ -3,6 +3,7 @@ import { Authentication, GameState, RoundState } from '../constants';
 import { authentication } from './auth';
 import { session } from './session';
 import { roundState } from './round';
+import { players } from './game';
 
 export const gameState = createStore<GameState>(GameState.Unauthorized, { name: 'Game state' });
 export const nextState = createEvent<GameState>('Game state advance');
@@ -32,6 +33,12 @@ gameState.on(session, (state, joinedSession) => {
 gameState.on(roundState, (state, newRoundState) => {
   if (state === GameState.ReadyToPlay && newRoundState !== RoundState.Unstarted) {
     return GameState.Round;
+  }
+});
+
+gameState.on(players, (state, players) => {
+  if ((state === GameState.Round || state === GameState.ReadyToPlay) && players.length <= 2) {
+    return GameState.Ended;
   }
 });
 

@@ -3,6 +3,7 @@ export enum GameState {
   SessionSelect = 'SessionSelect',
   ReadyToPlay = 'ReadyToPlay',
   Round = 'Round',
+  Ended = 'Ended',
 }
 
 export enum RoundState {

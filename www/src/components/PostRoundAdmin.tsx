@@ -2,11 +2,11 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import Page from './Page';
 import { useStore } from 'effector-react';
 import {
-  rounds as roundsStore,
   currentRound as currentRoundStore,
-  roundName as roundNameStore,
-  roundEndReason as roundEndReasonStore,
   nextRound,
+  roundEndReason as roundEndReasonStore,
+  roundName as roundNameStore,
+  rounds as roundsStore,
 } from '../lib/store/round';
 import { bank as bankStore, currentPlayer as currentPlayerStore, players as playersStore, stake as stakeStore } from '../lib/store/game';
 import Button from './Button';
@@ -52,7 +52,7 @@ const PostRoundAdmin: FunctionComponent = () => {
 
   const onRoundEndClick = useCallback(() => {
     if (weakId) {
-      nextRound({ roundId: currentRound, weakUserId: weakId });
+      void nextRound({ roundId: currentRound, weakUserId: weakId });
     }
   }, [weakId, currentRound, nextRound]);
 

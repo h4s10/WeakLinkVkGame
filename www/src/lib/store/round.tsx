@@ -2,12 +2,10 @@ import { RoundState } from '../constants';
 import { createEffect, createStore, Effect } from 'effector-logger';
 import { getConnectionInstance } from '../connection';
 import { Round, ServerTask, Session, User } from '../api';
-import { session, refreshState } from './session';
-import {
-  sessionUpdate as sessionUpdateEvent,
-  question as questionEvent,
-} from './serverEvents';
+import { refreshState, session } from './session';
+import { question as questionEvent, sessionUpdate as sessionUpdateEvent } from './serverEvents';
 import { bank, bankFull, currentPlayer, players, question, timeIsUp } from './game';
+import { endsAt as timerEndsAt, active as timerActive, start as startTimer } from './timer';
 
 export const roundState = createStore<RoundState>(RoundState.Unstarted, { name: 'Round state' });
 
@@ -22,7 +20,7 @@ export const nextRound: Effect<{ roundId: Round['id'], weakUserId: User['id'] },
 
 export const roundEndReason = createStore<'time' | 'bank' | 'noMoreQuestions' >(null, { name: 'Round end reason' });
 
-export const refresh: Effect<Session['id'] | void, void> = createEffect('Refresh round');
+export const refresh: Effect<Round['id'] | void, void> = createEffect('Refresh round');
 
 export const roundName = createStore<string>('Раунд 1', { name: 'Round name' });
 
@@ -37,26 +35,34 @@ players.reset(endRound.done);
 currentPlayer.reset(endRound.done);
 bank.reset(endRound.done);
 question.reset(endRound.done);
+timerEndsAt.reset(endRound.done);
+timerActive.reset(endRound.done);
 
-refresh.use((sessionId = session.getState()) => getConnectionInstance().invoke(ServerTask.GetRoundState, sessionId));
+refresh.use((roundId = currentRound.getState()) => getConnectionInstance().invoke(ServerTask.GetRoundState, roundId));
 
 roundState.on(createRound.done, () => RoundState.Playing);
 roundState.on(startRound.done, () => RoundState.Playing);
 roundState.on(endRound.done, () => RoundState.Unstarted);
 
-currentRound.watch((currentRound) => currentRound !== null && refresh(session.getState()));
+currentRound.watch((currentRound) => currentRound !== null && refresh());
 
 rounds.on(sessionUpdateEvent, (prev, { rounds }) => rounds);
 currentRound.on(sessionUpdateEvent, (prev, { current }) => current ?? null);
-roundName.on(sessionUpdateEvent, (prev, { rounds, current }) => `Раунд ${Math.max(rounds.indexOf(current), 0) + 1}`);
+roundName.on(sessionUpdateEvent, (prev, { rounds }) => `Раунд ${rounds.length}`);
 
 roundState.on(questionEvent, () => RoundState.Playing);
 
-roundState.on(timeIsUp, () => RoundState.Ended);
-roundState.on(bankFull, () => RoundState.Ended);
+roundState.on(timeIsUp, (currentState) => currentState === RoundState.Playing ? RoundState.Ended : undefined);
+roundState.on(bankFull, (currentState) => currentState === RoundState.Playing ? RoundState.Ended : undefined);
 roundEndReason.on(timeIsUp, () => 'time');
 roundEndReason.on(bankFull, () => 'bank');
 roundEndReason.on(roundState, (oldReason, newState) => newState === RoundState.Ended ? undefined : null);
+
+roundState.watch(state => {
+  if (state === RoundState.Playing) {
+    startTimer();
+  }
+});
 
 nextRound.use(async (endRoundParams) => {
   await endRound(endRoundParams);

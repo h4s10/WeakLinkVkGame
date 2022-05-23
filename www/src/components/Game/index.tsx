@@ -11,6 +11,7 @@ import { QuestionVerdict, RoundState } from '../../lib/constants';
 import { RoundInfo } from '../RoundInfo';
 import { QuestionCard } from '../QuestionCard';
 import { Score } from '../Score';
+import { active, endsAt } from '../../lib/store/timer';
 
 const Game: FunctionComponent = () => {
   const currentRound = useStore(currentRoundStore);
@@ -21,6 +22,8 @@ const Game: FunctionComponent = () => {
   const stake = useStore(stakeStore);
   const question = useStore(questionStore);
   const players = useStore(playersStore);
+  const timerEndsAt = useStore(endsAt);
+  const timerActive = useStore(active);
 
   const player = players.find(({ id }) => id === question.currentUserId);
 
@@ -58,10 +61,10 @@ const Game: FunctionComponent = () => {
       </div>
       <div className="row-span-1 col-span-7 grid-flow-row mt-12 relative">
         <RoundInfo
-          running={roundState === RoundState.Playing}
+          running={roundState === RoundState.Playing && timerActive}
           name={roundName}
           bank={bank}
-          endsAt={Date.now() + (2 * 60 + 30) * 1000}/>
+          endsAt={timerEndsAt}/>
       </div>
     </div>
   </Page>;
