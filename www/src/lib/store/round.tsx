@@ -1,15 +1,14 @@
 import { RoundState } from '../constants';
 import { createEffect, createStore, Effect } from 'effector-logger';
 import { getConnectionInstance } from '../connection';
-import { Round, ServerTask, Session, User } from '../api';
+import { Round, RoundState as ServerRoundState, ServerTask, Session, User } from '../api';
 import { refreshState, session } from './session';
-import { question as questionEvent, sessionUpdate as sessionUpdateEvent } from './serverEvents';
+import { question as questionEvent, roundUpdate, sessionUpdate as sessionUpdateEvent } from './serverEvents';
 import { bank, bankFull, currentPlayer, players, question, timeIsUp } from './game';
 import { endsAt as timerEndsAt, active as timerActive, start as startTimer } from './timer';
 
 export const roundState = createStore<RoundState>(RoundState.Unstarted, { name: 'Round state' });
 
-export const rounds = createStore<Round['id'][]>([], { name: 'Round ids' });
 export const currentRound = createStore<Round['id']>(null, { name: 'Current round id' });
 
 export const createRound: Effect<Session['id'] | void, void> = createEffect('Create round');
@@ -23,6 +22,8 @@ export const roundEndReason = createStore<'time' | 'bank' | 'noMoreQuestions' >(
 export const refresh: Effect<Round['id'] | void, void> = createEffect('Refresh round');
 
 export const roundName = createStore<string>('Раунд 1', { name: 'Round name' });
+
+export const allRounds = createStore<Record<Round['id'], ServerRoundState>>({}, { name: 'All past rounds' });
 
 createRound.use((sessionId: number = session.getState()) => getConnectionInstance().invoke(ServerTask.CreateRound, sessionId));
 startRound.use((id: number = currentRound.getState()) => getConnectionInstance().invoke(ServerTask.StartRound, id))
@@ -46,7 +47,6 @@ roundState.on(endRound.done, () => RoundState.Unstarted);
 
 currentRound.watch((currentRound) => currentRound !== null && refresh());
 
-rounds.on(sessionUpdateEvent, (prev, { rounds }) => rounds);
 currentRound.on(sessionUpdateEvent, (prev, { current }) => current ?? null);
 roundName.on(sessionUpdateEvent, (prev, { rounds }) => `Раунд ${rounds.length}`);
 
@@ -57,6 +57,11 @@ roundState.on(bankFull, (currentState) => currentState === RoundState.Playing ? 
 roundEndReason.on(timeIsUp, () => 'time');
 roundEndReason.on(bankFull, () => 'bank');
 roundEndReason.on(roundState, (oldReason, newState) => newState === RoundState.Ended ? undefined : null);
+
+allRounds.on(roundUpdate, (pastRounds, roundUpdate) => ({
+  ...pastRounds,
+  [roundUpdate.roundId]: roundUpdate,
+}));
 
 roundState.watch(state => {
   if (state === RoundState.Playing) {

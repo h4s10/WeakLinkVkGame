@@ -2,7 +2,7 @@ import { createEffect, createEvent, createStore, Effect } from 'effector-logger'
 import { AnswerQuestionRequest, Question, Round, ServerTask, User, UserRound } from '../api';
 import { question as questionEvent, roundUpdate as roundUpdateEvent } from './serverEvents';
 import { getConnectionInstance } from '../connection';
-import { refresh } from './round';
+import { currentRound, refresh } from './round';
 import { MAX_SCORE } from '../settings';
 import { active as timerActive } from './timer';
 
@@ -33,8 +33,16 @@ export const answerQuestion: Effect<{
   roundId: Round['id']
 }, void> = createEffect('Answer question');
 
-players.on(roundUpdateEvent, (prev, { users }) => users);
-currentPlayer.on(roundUpdateEvent, (prev, { currentUserId }) => currentUserId);
+players.on(roundUpdateEvent, (prev, { users, roundId }) => {
+  if (roundId === currentRound.getState()) {
+    return users;
+  }
+});
+currentPlayer.on(roundUpdateEvent, (prev, { currentUserId, roundId }) => {
+  if (roundId === currentRound.getState()) {
+    return currentUserId;
+  }
+});
 question.on(questionEvent, (prev, next) => next);
 
 saveBank.use(({ questionId, sum, userId, roundId }) =>
