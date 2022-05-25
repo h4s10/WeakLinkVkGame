@@ -37,7 +37,7 @@ gameState.on(roundState, (state, newRoundState) => {
 });
 
 gameState.on(players, (state, players) => {
-  if ((state === GameState.Round || state === GameState.ReadyToPlay) && players.length <= 2) {
+  if ((state === GameState.Round || state === GameState.ReadyToPlay) && players.length > 0 && players.length <= 2) {
     return GameState.Ended;
   }
 });
