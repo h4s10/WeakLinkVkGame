@@ -14,18 +14,6 @@ const Input: FunctionComponent<Props> = ({ submit, change, buttonText }) => {
 
   const elementRef = useRef<HTMLInputElement>();
 
-  const handlerCallback = useCallback(() => {
-    const value = elementRef.current?.value;
-    if (value) {
-      submit(value);
-    }
-
-    if (elementRef.current) {
-      elementRef.current.value = '';
-      setInput('');
-    }
-  }, [submit]);
-
   const handlerInput = () => {
     const value = elementRef.current?.value;
     if (change) {
@@ -37,8 +25,16 @@ const Input: FunctionComponent<Props> = ({ submit, change, buttonText }) => {
 
   const onSubmit: FormEventHandler = useCallback((event) => {
     event.preventDefault();
-    handlerCallback();
-  }, []);
+    const value = elementRef.current?.value;
+    if (value) {
+      submit(value);
+    }
+
+    if (elementRef.current) {
+      elementRef.current.value = '';
+      setInput('');
+    }
+  }, [submit]);
 
   return <form className="flex flex-row place-content-between gap-10" onSubmit={onSubmit}>
     <div className="group relative w-full h-full">
@@ -50,7 +46,7 @@ const Input: FunctionComponent<Props> = ({ submit, change, buttonText }) => {
              className="absolute inset-0 pointer-events-none form-input w-full h-full border-0 text-h5 2xl:text-h4 p-3 appearance-none bg-transparent text-center text-vk-blue"
              disabled={true} value={input} style={{ 'background': 'transparent' }} />
     </div>
-    {buttonText ? <Button className="bg-vk-blue text-white max-w-xs rounded-md" handler={handlerCallback}>{buttonText}</Button> : null}
+    {buttonText ? <Button className="bg-vk-blue text-white max-w-xs rounded-md">{buttonText}</Button> : null}
   </form>;
 };
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import { QuestionVerdict, Role } from '../../lib/constants';
@@ -20,6 +20,44 @@ interface Props {
 
 const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose }) => {
   const { text = '', answers = [] } = question;
+
+  const onKeyPress: EventListener = useCallback((event: KeyboardEvent) => {
+    if (
+      role === Role.Admin &&
+      !(event.altKey || event.metaKey || event.shiftKey || event.ctrlKey)
+    ) {
+      let handled = false
+      switch (event.key) {
+        case 'ArrowRight':
+        case ' ':
+        case 'Enter':
+          handled = true;
+          onVerdict(QuestionVerdict.correct);
+          break;
+
+        case 'ArrowLeft':
+          handled = true;
+          onVerdict(QuestionVerdict.incorrect);
+          break;
+
+        case 'ArrowDown':
+        case 'b':
+          handled = true;
+          onVerdict(QuestionVerdict.bank);
+          break;
+      }
+
+      if (handled) {
+        event.preventDefault();
+      }
+    }
+    }, [role, onVerdict]);
+
+  useEffect(() => {
+    document.body.addEventListener('keydown', onKeyPress);
+    return () => document.body.removeEventListener('keydown', onKeyPress);
+  }, [onKeyPress]);
+
   return <div className="relative flex flex-col bg-white text-black rounded-md w-full h-full p-[3.125rem] z-10">
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
       <div className="flex-none mr-12"><Avatar /></div>

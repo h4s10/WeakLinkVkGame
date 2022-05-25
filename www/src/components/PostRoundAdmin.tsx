@@ -67,11 +67,16 @@ const PostRoundAdmin: FunctionComponent = () => {
         <div className="text-h5 2xl:text-h4">{roundEndReason === 'bank' && 'Достигли максимального количества очков!'} </div>
         <div className="text-h5 2xl:ext-h4">{roundEndReason === 'time' && 'Время вышло!'} </div>
         <div className="text-h5 2xl:ext-h4">{roundEndReason === 'noMoreQuestions' && 'Закончились вопросы!'} </div>
-        {stake === 0 ? <div className="text-h5 2xl:text-h4 mt-10">Успели положить все очки в банк</div> :
-          <div className="text-h5 2xl:text-h4 mt-10"> Не успели положить <span className="text-incorrect">{stake}</span> {pluralizeScore(stake)} в банк</div>}
-        <div className="text-h5 2xl:text-h3">В банке <span className="text-neutral font-bold">{bank}</span> {pluralizeScore(bank)}!</div>
-
-        <Button className="bg-muted rounded text-vk-blue" handler={() => setShowEntryPopup(false)}>К статистике и голосованию</Button>
+        { bank === 0 && <div className="text-h5 2xl:text-h3">Ничего не заработали!</div> }
+        { bank > 0 && <>
+          {
+            stake === 0  ?
+              <div className="text-h5 2xl:text-h4 mt-10">Успели положить все очки в банк</div> :
+              <div className="text-h5 2xl:text-h4 mt-10"> Не успели положить <span className="text-incorrect">{stake}</span> {pluralizeScore(stake)} в банк</div>
+          }
+          <div className="text-h5 2xl:text-h3">В банке <span className="text-neutral font-bold">{bank}</span> {pluralizeScore(bank)}!</div>
+        </> }
+        <Button focused className="bg-muted rounded text-vk-blue" handler={() => setShowEntryPopup(false)}>К статистике и голосованию</Button>
       </div>
     </Page>;
   }
@@ -99,7 +104,7 @@ const PostRoundAdmin: FunctionComponent = () => {
         }
       </div>
       {weakUser && displayedRound === currentRound && <div>
-        <Button className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name}, <span className="text-muted/70">Вы – Слабое звено! Прощайте!</span></Button>
+        <Button focused className="bg-vk-blue rounded-md" handler={onRoundEndClick}>{weakUser.name}, <span className="text-muted/70">Вы – Слабое звено! Прощайте!</span></Button>
       </div>}
     </div>
   </Page>;

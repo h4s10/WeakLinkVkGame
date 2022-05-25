@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import type { Key } from 'react';
 import Button from './Button';
-import Throbber from './Throbber';
 import { ReactComponent as Sync } from '../../assets/syncOutline.svg';
 import Input from './Input';
 import cn from 'classnames';
@@ -38,9 +37,7 @@ const List = <T extends any>({ header, items, selected = [], refresh, serialize,
   };
 
   if (refreshing) {
-    return <div className="ml-[50%]">
-      <Throbber />
-    </div>;
+    return null;
   }
 
   return <>

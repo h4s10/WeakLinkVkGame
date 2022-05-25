@@ -80,9 +80,7 @@ export default () => {
           {/*  <input type="number" className="text-dark" value={2} /> m*/}
           {/*  <input type="number" className="text-dark" value={30} /> s*/}
           {/*</div>*/}
-          <Button className="bg-muted text-vk-blue rounded" handler={() => {
-            startRound(currentRound.getState());
-          }}>Начинаем</Button>
+          <Button focused className="bg-muted text-vk-blue rounded" handler={() => startRound(currentRound.getState())}>Начинаем</Button>
         </div>
       </Page> : <SplashScreen caption={roundName} />
     case GameState.Round:
@@ -100,9 +98,7 @@ export default () => {
           {player.name} набрал {player.bankSum}
         </div>) }
         { role === Role.Admin &&
-          <Button className="bg-muted text-vk-blue rounded" handler={() => {
-            nextState(GameState.SessionSelect);
-          }}>Завершить</Button>
+          <Button focused className="bg-muted text-vk-blue rounded" handler={() => nextState(GameState.SessionSelect)}>Завершить</Button>
         }
       </Page>
     default:
