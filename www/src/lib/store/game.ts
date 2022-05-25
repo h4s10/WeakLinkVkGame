@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore, Effect } from 'effector-logger';
-import { AnswerQuestionRequest, Question, Round, ServerTask, User, UserRound } from '../api';
-import { question as questionEvent, roundUpdate as roundUpdateEvent } from './serverEvents';
+import { AnswerQuestionRequest, Question, Round, ServerError, ServerTask, User, UserRound } from '../api';
+import { error, question as questionEvent, roundUpdate as roundUpdateEvent } from './serverEvents';
 import { getConnectionInstance } from '../connection';
 import { currentRound, refresh } from './round';
 import { MAX_SCORE } from '../settings';
@@ -19,6 +19,7 @@ stake.shortName = "Stake";
 
 export const timeIsUp = createEvent('Round time is up');
 export const bankFull = createEvent('Bank is full');
+export const questionsEnded = createEvent('Out of questions');
 
 export const saveBank: Effect<{
   questionId: Question['id'],
@@ -66,6 +67,12 @@ timerActive.watch((active) => {
     timeIsUp();
   }
 });
+
+error.watch((error) => {
+  if (error === ServerError.NO_QUESTIONS) {
+    questionsEnded();
+  }
+})
 
 answerQuestion.use(({ isCorrect, questionId, userId, roundId }) =>
   getConnectionInstance().invoke(ServerTask.AnswerQuestion, {

@@ -7,6 +7,7 @@ export enum ClientTask {
   SendRoundState = 'SendRoundState',
   SendSessionState = 'SendSessionState',
   SendQuestion = 'SendQuestion',
+  Error = 'SendQuestion',
 }
 
 // События/методы которые клиенты вызывает у сервера
@@ -90,6 +91,10 @@ export interface AnswerQuestionRequest {
   isCorrect: boolean,
   userId: User['id'],
   roundId: Round['id'],
+}
+
+export enum ServerError {
+  NO_QUESTIONS = 'No available questions in DB with state New',
 }
 
 export const request = async <Response extends unknown, Payload extends unknown> (method: 'GET' | 'POST', task: RestTask, body?: Payload): Promise<Response> => {

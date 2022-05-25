@@ -4,7 +4,7 @@ import { getConnectionInstance } from '../connection';
 import { Round, RoundState as ServerRoundState, ServerTask, Session, User } from '../api';
 import { refreshState, session } from './session';
 import { question as questionEvent, roundUpdate, sessionUpdate as sessionUpdateEvent } from './serverEvents';
-import { bank, bankFull, currentPlayer, players, question, timeIsUp } from './game';
+import { bank, bankFull, questionsEnded, currentPlayer, players, question, timeIsUp } from './game';
 import { endsAt as timerEndsAt, active as timerActive, start as startTimer } from './timer';
 
 export const roundState = createStore<RoundState>(RoundState.Unstarted, { name: 'Round state' });
@@ -54,8 +54,10 @@ roundState.on(questionEvent, () => RoundState.Playing);
 
 roundState.on(timeIsUp, (currentState) => currentState === RoundState.Playing ? RoundState.Ended : undefined);
 roundState.on(bankFull, (currentState) => currentState === RoundState.Playing ? RoundState.Ended : undefined);
+roundState.on(questionsEnded, (currentState) => currentState === RoundState.Playing ? RoundState.Ended : undefined);
 roundEndReason.on(timeIsUp, () => 'time');
 roundEndReason.on(bankFull, () => 'bank');
+roundEndReason.on(questionsEnded, () => 'noMoreQuestions');
 roundEndReason.on(roundState, (oldReason, newState) => newState === RoundState.Ended ? undefined : null);
 
 allRounds.on(roundUpdate, (pastRounds, roundUpdate) => ({

@@ -36,15 +36,6 @@ export default () => {
   const roundState = useStore(roundStateStore);
   const players = useStore(playersStore);
 
-  useEffect(() => {
-    if (!connection) {
-      return;
-    }
-    for (const name of Object.keys(ClientTask)) {
-      connection.on(name, (...data) => console.log(name, ...data));
-    }
-  }, [connection]);
-
   if (connectionError) {
     return <SplashScreen caption="Мы – самое слабое звено" content={<div className="text-h5 2xl:text-h4 font-mono">{connectionError.toString()}</div>} />;
   }
