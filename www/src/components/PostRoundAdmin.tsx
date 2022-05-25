@@ -7,12 +7,12 @@ import {
   nextRound,
   roundEndReason as roundEndReasonStore,
   roundName as roundNameStore,
-  allRounds as allRoundsStore,
+  allRounds as allRoundsStore, refresh,
 } from '../lib/store/round';
 import { bank as bankStore, currentPlayer as currentPlayerStore, players as playersStore, stake as stakeStore } from '../lib/store/game';
 import Button from './Button';
 import { PlayersGrid } from './PlayersGrid';
-import { RoundState as ServerRoundState, User } from '../lib/api';
+import { Round, RoundState as ServerRoundState, User } from '../lib/api';
 import { TabButton } from './Tabs/TabButton';
 import { Tabs } from './Tabs/Tabs';
 
@@ -59,6 +59,11 @@ const PostRoundAdmin: FunctionComponent = () => {
 
   const generatePastRoundName = (round: ServerRoundState): string => `Раунд ${round.users.filter(u => u.isWeak).length}`;
 
+  const switchRound = (roundId: Round['id']) => {
+    void refresh(roundId);
+    setDisplayedRound(roundId);
+  }
+
   if (showEntryPopup) {
     return <Page>
       <img className="absolute inset-0 -z-10" src={splashPattern} />
@@ -86,10 +91,10 @@ const PostRoundAdmin: FunctionComponent = () => {
       <div className="flex gap-5 items-center justify-between">
         <h1 className="text-h5 2xl:text-h4 mb-2">Статистика</h1>
         <Tabs> {
-          Object.values(allRounds).map(round => <TabButton
+          Object.values(allRounds).map(round => round && <TabButton
             key={round.roundId}
             active={round.roundId === displayedRound}
-            handler={() => setDisplayedRound(round.roundId)}
+            handler={() => switchRound(round.roundId)}
           >
             {round.roundId === currentRound ? currentRoundName : generatePastRoundName(round)}
           </TabButton>)

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import 'effector-logger/inspector';
 import './global.css';
 import splashPattern from '../assets/splashPattern.svg';
 import { useConnection } from './lib/connection';
-import { gameState as gameStateStore, nextState } from './lib/store/gameState';
+import { gameState as gameStateStore } from './lib/store/gameState';
 import { authenticate, authentication as authenticationStore, role as roleStore } from './lib/store/auth';
 import { GameState, Role, RoundState } from './lib/constants';
 import AuthenticationForm from './components/AuthenticationForm';
@@ -16,13 +16,12 @@ import GameAdmin from './components/GameAdmin';
 import { HubConnectionState } from '@microsoft/signalr';
 import { availableSessions, createSession, refreshAvailable as refreshSessions, setSession } from './lib/store/session';
 import { currentRound, roundName as roundNameStore, roundState as roundStateStore, startRound } from './lib/store/round';
-import { ClientTask } from './lib/api';
 import { create as createUser, refresh as refreshUsers, users as usersStore } from './lib/store/users';
 import { SERVER_URL, SIGNAL_R_HUB } from './lib/settings';
 import Button from './components/Button';
 import Page from './components/Page';
 import PostRoundAdmin from './components/PostRoundAdmin';
-import { players as playersStore } from './lib/store/game';
+import GameOver from './components/GameOver';
 
 export default () => {
   const [connection, connectionState, connectionError] = useConnection(new URL(SIGNAL_R_HUB, SERVER_URL).toString());
@@ -34,10 +33,9 @@ export default () => {
   const users = useStore(usersStore);
   const roundName = useStore(roundNameStore);
   const roundState = useStore(roundStateStore);
-  const players = useStore(playersStore);
 
   if (connectionError) {
-    return <SplashScreen caption="Мы – самое слабое звено" content={<div className="text-h5 2xl:text-h4 font-mono">{connectionError.toString()}</div>} />;
+    return <SplashScreen caption="Мы – самое слабое звено"><div className="text-h5 2xl:text-h4 font-mono">{connectionError.toString()}</div></SplashScreen>;
   }
 
   if (connectionState !== HubConnectionState.Connected) {
@@ -83,15 +81,7 @@ export default () => {
       }
       return;
     case GameState.Ended:
-      return <Page>
-        <h1 className="text-h1">Игра окончена</h1>
-        { players.map(player => <div key={player.id}>
-          {player.name} набрал {player.bankSum}
-        </div>) }
-        { role === Role.Admin &&
-          <Button focused className="bg-muted text-vk-blue rounded" handler={() => nextState(GameState.SessionSelect)}>Завершить</Button>
-        }
-      </Page>
+      return <GameOver/>
     default:
       return <SplashScreen />;
   }

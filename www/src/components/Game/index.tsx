@@ -25,7 +25,7 @@ const Game: FunctionComponent = () => {
   const timerEndsAt = useStore(endsAt);
   const timerActive = useStore(active);
 
-  const player = players.find(({ id }) => id === question.currentUserId);
+  const player = question && players.find(({ id }) => id === question.currentUserId);
 
   const onVerdict = useCallback((verdict: QuestionVerdict) => {
     if (verdict === QuestionVerdict.bank) {

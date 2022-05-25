@@ -23,7 +23,10 @@ export const refresh: Effect<Round['id'] | void, void> = createEffect('Refresh r
 
 export const roundName = createStore<string>('Раунд 1', { name: 'Round name' });
 
-export const allRounds = createStore<Record<Round['id'], ServerRoundState>>({}, { name: 'All past rounds' });
+export const allRounds = createStore<Record<Round['id'], ServerRoundState | null>>({}, {
+  name: 'All past rounds',
+  updateFilter: (prev, next) => JSON.stringify(prev) !== JSON.stringify(next),
+});
 
 createRound.use((sessionId: number = session.getState()) => getConnectionInstance().invoke(ServerTask.CreateRound, sessionId));
 startRound.use((id: number = currentRound.getState()) => getConnectionInstance().invoke(ServerTask.StartRound, id))
@@ -59,6 +62,11 @@ roundEndReason.on(timeIsUp, () => 'time');
 roundEndReason.on(bankFull, () => 'bank');
 roundEndReason.on(questionsEnded, () => 'noMoreQuestions');
 roundEndReason.on(roundState, (oldReason, newState) => newState === RoundState.Ended ? undefined : null);
+
+allRounds.on(sessionUpdateEvent, (prevRoundsData, { rounds }) => ({
+  ...Object.fromEntries(rounds.map(k => [k, null])),
+  ...prevRoundsData,
+}));
 
 allRounds.on(roundUpdate, (pastRounds, roundUpdate) => ({
   ...pastRounds,
