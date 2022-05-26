@@ -55,8 +55,8 @@ const PostRoundAdmin: FunctionComponent = () => {
   const onRoundEndClick = useCallback(() => {
     if (weakId) {
       if (currentRoundPlayers.length -1 <= WINNERS_PER_SESSION) {
-        void endRound({ roundId: currentRound, weakUserId: weakId });
-        // void nextRound({ roundId: currentRound, weakUserId: weakId });
+        // void endRound({ roundId: currentRound, weakUserId: weakId });
+        void nextRound({ roundId: currentRound, weakUserId: weakId });
       } else {
         void nextRound({ roundId: currentRound, weakUserId: weakId });
       }
