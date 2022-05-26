@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import { QuestionVerdict, Role } from '../../lib/constants';
@@ -20,29 +20,33 @@ interface Props {
 
 const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose }) => {
   const { text = '', answers = [] } = question;
+  const [shine, setShine] = useState<QuestionVerdict | null>(null);
 
   const onKeyPress: EventListener = useCallback((event: KeyboardEvent) => {
     if (
       role === Role.Admin &&
       !(event.altKey || event.metaKey || event.shiftKey || event.ctrlKey)
     ) {
-      let handled = false
+      let handled = false;
       switch (event.key) {
         case 'ArrowRight':
         case ' ':
         case 'Enter':
           handled = true;
+          setShine(QuestionVerdict.correct);
           onVerdict(QuestionVerdict.correct);
           break;
 
         case 'ArrowLeft':
           handled = true;
+          setShine(QuestionVerdict.incorrect);
           onVerdict(QuestionVerdict.incorrect);
           break;
 
         case 'ArrowDown':
         case 'b':
           handled = true;
+          setShine(QuestionVerdict.bank);
           onVerdict(QuestionVerdict.bank);
           break;
       }
@@ -51,12 +55,16 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
         event.preventDefault();
       }
     }
-    }, [role, onVerdict]);
+  }, [role, onVerdict]);
 
   useEffect(() => {
     document.body.addEventListener('keydown', onKeyPress);
     return () => document.body.removeEventListener('keydown', onKeyPress);
   }, [onKeyPress]);
+
+  useEffect(() => {
+    setShine(null);
+  }, [question]);
 
   return <div className="relative flex flex-col bg-white text-black rounded-md w-full h-full p-[3.125rem] z-10">
     <div className="flex flex-row flex-nowrap leading-[2.75rem] pb-[1rem] 2xl:pb-[2rem]">
@@ -85,17 +93,23 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
       </div> : <div className="text-h5 py-2 px-8 rounded-lg border-4 border-correct shadow-md"><ReactMarkdown>{answers[0].text}</ReactMarkdown></div>}
       {role === Role.Admin ? <div className="flex gap-4">
         <div className="basis-1/2 flex-1 flex">
-          <Button className="basis-1/2 flex-none bg-neutral text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg"
+          <Button className={cn('basis-1/2 flex-none bg-neutral text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg', {
+            'shadow-neutral/90 animate-ping': shine === QuestionVerdict.bank,
+          })}
                   handler={() => {onVerdict(QuestionVerdict.bank);}}>
             Банк
           </Button>
         </div>
         <div className="basis-1/2 flex-1 flex gap-2">
-          <Button className="bg-incorrect text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg"
+          <Button className={cn('bg-incorrect text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg', {
+            'shadow-incorrect/90 animate-ping': shine === QuestionVerdict.incorrect,
+          })}
                   handler={() => {onVerdict(QuestionVerdict.incorrect);}}>
             Неправильно
           </Button>
-          <Button className="bg-correct text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg"
+          <Button className={cn('bg-correct text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg', {
+            'shadow-correct/90 animate-ping': shine === QuestionVerdict.correct,
+          })}
                   handler={() => {onVerdict(QuestionVerdict.correct);}}>
             Правильно
           </Button>
