@@ -38,7 +38,10 @@ gameState.on(roundState, (state, newRoundState) => {
 });
 
 gameState.on(players, (state, players) => {
-  if ((state === GameState.Round || state === GameState.ReadyToPlay) && players.length > 0 && players.length <= WINNERS_PER_SESSION) {
+  if ((state === GameState.Round || state === GameState.ReadyToPlay) &&
+    players.length > 0 &&
+    players.filter( ({ isWeak }) => !isWeak ).length <= WINNERS_PER_SESSION
+  ) {
     return GameState.Ended;
   }
 });

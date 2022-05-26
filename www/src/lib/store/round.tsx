@@ -1,7 +1,7 @@
 import { RoundState } from '../constants';
 import { createEffect, createStore, Effect } from 'effector-logger';
 import { getConnectionInstance } from '../connection';
-import { Round, RoundState as ServerRoundState, ServerTask, Session, User } from '../api';
+import { Round, Round as ServerRoundState, ServerTask, Session, User } from '../api';
 import { refreshState, session } from './session';
 import { question as questionEvent, roundUpdate, sessionUpdate as sessionUpdateEvent } from './serverEvents';
 import { bank, bankFull, questionsEnded, currentPlayer, players, question, timeIsUp } from './game';
@@ -9,21 +9,21 @@ import { endsAt as timerEndsAt, active as timerActive, start as startTimer } fro
 
 export const roundState = createStore<RoundState>(RoundState.Unstarted, { name: 'Round state' });
 
-export const currentRound = createStore<Round['id']>(null, { name: 'Current round id' });
+export const currentRound = createStore<Round['roundId']>(null, { name: 'Current round id' });
 
 export const createRound: Effect<Session['id'] | void, void> = createEffect('Create round');
-export const startRound: Effect<Round['id'], void> = createEffect('Start round');
-export const endRound: Effect<{ roundId: Round['id'], weakUserId: User['id'] }, void> = createEffect('End round');
+export const startRound: Effect<Round['roundId'], void> = createEffect('Start round');
+export const endRound: Effect<{ roundId: Round['roundId'], weakUserId: User['id'] }, void> = createEffect('End round');
 
-export const nextRound: Effect<{ roundId: Round['id'], weakUserId: User['id'] }, void> = createEffect('Next round');
+export const nextRound: Effect<{ roundId: Round['roundId'], weakUserId: User['id'] }, void> = createEffect('Next round');
 
 export const roundEndReason = createStore<'time' | 'bank' | 'noMoreQuestions' >(null, { name: 'Round end reason' });
 
-export const refresh: Effect<Round['id'] | void, void> = createEffect('Refresh round');
+export const refresh: Effect<Round['roundId'] | void, void> = createEffect('Refresh round');
 
 export const roundName = createStore<string>('Раунд 1', { name: 'Round name' });
 
-export const allRounds = createStore<Record<Round['id'], ServerRoundState | null>>({}, {
+export const allRounds = createStore<Record<Round['roundId'], ServerRoundState | null>>({}, {
   name: 'All past rounds',
   updateFilter: (prev, next) => JSON.stringify(prev) !== JSON.stringify(next),
 });
@@ -63,10 +63,20 @@ roundEndReason.on(bankFull, () => 'bank');
 roundEndReason.on(questionsEnded, () => 'noMoreQuestions');
 roundEndReason.on(roundState, (oldReason, newState) => newState === RoundState.Ended ? undefined : null);
 
-allRounds.on(sessionUpdateEvent, (prevRoundsData, { rounds }) => ({
-  ...Object.fromEntries(rounds.map(k => [k, null])),
-  ...prevRoundsData,
-}));
+allRounds.on(sessionUpdateEvent, (prevRoundsData, { rounds }) => {
+  const next = {
+    ...Object.fromEntries(rounds.map(k => [k.id, null])),
+    ...prevRoundsData
+  }
+
+  for (const round of rounds) {
+    if (next[round.id] !== null) {
+      next[round.id].roundState = round.state;
+    }
+  }
+
+  return next;
+});
 
 allRounds.on(roundUpdate, (pastRounds, roundUpdate) => ({
   ...pastRounds,

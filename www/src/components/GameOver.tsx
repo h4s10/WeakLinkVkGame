@@ -9,7 +9,7 @@ import { role as roleStore } from '../lib/store/auth';
 import { refreshState as refreshSession } from '../lib/store/session';
 import { allRounds as allRoundsStore, refresh as refreshRound } from '../lib/store/round';
 import { players as playersStore } from '../lib/store/game';
-import { RoundState, UserRound } from '../lib/api';
+import { Round, UserRound } from '../lib/api';
 import SplashScreen from './SplashScreen';
 
 const GameOver: FunctionComponent = () => {
@@ -28,7 +28,7 @@ const GameOver: FunctionComponent = () => {
   }, [refreshSession, refreshRound]);
 
   useEffect(() => {
-    const score = (Object.values(allRounds) as (RoundState | null)[]).filter(Boolean).reduce(
+    const score = (Object.values(allRounds) as (Round | null)[]).filter(Boolean).reduce(
       (gameSum, { users }) => gameSum + users.reduce(
         (roundSum, { bankSum }) => roundSum + bankSum,
         0),
@@ -42,7 +42,7 @@ const GameOver: FunctionComponent = () => {
       return 0;
     }
 
-    return (Object.values(allRounds) as (RoundState | null)[]).filter(Boolean).reduce(
+    return (Object.values(allRounds) as (Round | null)[]).filter(Boolean).reduce(
       (gameSum, { users }) => gameSum + users.find(({ id }) => id === userId)?.bankSum ?? 0,
       0
     );
@@ -51,9 +51,16 @@ const GameOver: FunctionComponent = () => {
   return <SplashScreen caption='Игра закончена!'>
     <h1 className="text-9xl">{ cumulativeScore }</h1>
     <ul className="list-decimal mt-10 w-auto">
-      { roundPlayers.map((player, i) => <li key={player.id} className="text-h7 font-thin flex place-content-between mx-2">
-        <span><span className="text-muted inline-block min-w-[2rem]">{i + 1}.</span>{player.name}</span> <span>{getUserTotalScore(player.id)}</span>
-      </li>) }
+      { roundPlayers
+        .filter( ({ isWeak }) => !isWeak )
+        .map(player => ({ player, score: getUserTotalScore(player.id) }))
+        .sort((a, b) => b.score - a.score)
+        .map(({ player, score }, i) =>
+          <li key={player.id} className="text-h7 font-thin flex place-content-between mx-2">
+            <span><span className="text-muted inline-block min-w-[2rem]">{i + 1}.</span>{player.name}</span> <span>{score}</span>
+          </li>
+        )
+      }
     </ul>
 
     { role === Role.Admin &&

@@ -1,9 +1,9 @@
 import { createEvent } from 'effector-logger';
-import { ClientTask, Question, Round, RoundState as ServerRoundState, ServerError } from '../api';
+import { ClientTask, Question, Round, ServerError } from '../api';
 import { connectionEstablished, getConnectionInstance } from '../connection';
 
-export const sessionUpdate = createEvent<{ rounds: Round['id'][], current?: Round['id'] }>({ name: 'Server sent session update' });
-export const roundUpdate = createEvent<ServerRoundState>({ name: 'Server sent round update' });
+export const sessionUpdate = createEvent<{ rounds: { id: Round['roundId'], state: Round['roundState'] }[], current?: Round['roundId'] }>({ name: 'Server sent session update' });
+export const roundUpdate = createEvent<Round>({ name: 'Server sent round update' });
 export const question = createEvent<Question>({ name: 'Server sent round update' });
 export const error = createEvent<ServerError | string>({ name: 'Server sent errror' });
 

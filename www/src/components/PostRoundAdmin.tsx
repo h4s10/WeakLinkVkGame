@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import Page from './Page';
 import { useStore } from 'effector-react';
 import splashPattern from '../../assets/splashPattern.svg';
@@ -7,15 +7,16 @@ import {
   nextRound,
   roundEndReason as roundEndReasonStore,
   roundName as roundNameStore,
-  allRounds as allRoundsStore, refresh, endRound,
+  allRounds as allRoundsStore, refresh, endRound, refresh as refreshRound,
 } from '../lib/store/round';
 import { bank as bankStore, currentPlayer as currentPlayerStore, players, players as playersStore, stake as stakeStore } from '../lib/store/game';
 import Button from './Button';
 import { PlayersGrid } from './PlayersGrid';
-import { Round, RoundState as ServerRoundState, User } from '../lib/api';
+import { Round, Round as ServerRoundState, User } from '../lib/api';
 import { TabButton } from './Tabs/TabButton';
 import { Tabs } from './Tabs/Tabs';
-import { WINNERS_PER_SESSION } from '../lib/settings';
+import { USERS_PER_SESSION, WINNERS_PER_SESSION } from '../lib/settings';
+import { refreshState as refreshSession, refreshState as refreshSessionState } from '../lib/store/session';
 
 const pluralizeScore = (score) => ({
     one: 'очко',
@@ -36,6 +37,14 @@ const PostRoundAdmin: FunctionComponent = () => {
   const [weakId, setWeakId] = useState<User['id']>();
   const [displayedRound, setDisplayedRound] = useState(currentRound);
 
+  useEffect(() => {
+    void refreshSession();
+
+    for (const id of Object.keys(allRounds)) {
+      void refreshRound(parseInt(id, 10));
+    }
+  }, [refreshSession, refreshRound]);
+
   const weakUser = weakId !== undefined && currentRoundPlayers.find(({ id }) => id === weakId);
 
   const onPlayerClick = useCallback((clicked: User['id']) => {
@@ -55,17 +64,17 @@ const PostRoundAdmin: FunctionComponent = () => {
   const onRoundEndClick = useCallback(() => {
     if (weakId) {
       if (currentRoundPlayers.length -1 <= WINNERS_PER_SESSION) {
-        // void endRound({ roundId: currentRound, weakUserId: weakId });
-        void nextRound({ roundId: currentRound, weakUserId: weakId });
+        void endRound({ roundId: currentRound, weakUserId: weakId }); // статус раунда проверить
       } else {
         void nextRound({ roundId: currentRound, weakUserId: weakId });
       }
     }
   }, [weakId, currentRound, nextRound]);
 
-  const generatePastRoundName = (round: ServerRoundState): string => `Раунд ${round.users.filter(u => u.isWeak).length}`;
+  const generatePastRoundName = (round?: ServerRoundState): string => !round?.users ? 'Раунд ?':
+    `Раунд ${USERS_PER_SESSION - round.users.length + 1}`;
 
-  const switchRound = (roundId: Round['id']) => {
+  const switchRound = (roundId: Round['roundId']) => {
     void refresh(roundId);
     setDisplayedRound(roundId);
   }
@@ -97,12 +106,15 @@ const PostRoundAdmin: FunctionComponent = () => {
       <div className="flex gap-5 items-center justify-between">
         <h1 className="text-h5 2xl:text-h4 mb-2">Статистика</h1>
         <Tabs> {
-          Object.values(allRounds).map(round => round && <TabButton
-            key={round.roundId}
-            active={round.roundId === displayedRound}
-            handler={() => switchRound(round.roundId)}
+          Object.entries(allRounds).map(([roundIdString, round]) => <TabButton
+            key={roundIdString}
+            active={round?.roundId === displayedRound}
+            handler={async () => {
+              await refreshRound(parseInt(roundIdString, 10));
+              switchRound(parseInt(roundIdString, 10));
+            }}
           >
-            {round.roundId === currentRound ? currentRoundName : generatePastRoundName(round)}
+            {round?.roundId === currentRound ? currentRoundName : generatePastRoundName(round)}
           </TabButton>)
         } </Tabs>
       </div>

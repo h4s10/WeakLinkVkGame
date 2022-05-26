@@ -1,5 +1,5 @@
 import { createEffect, createEvent, createStore, Effect } from 'effector-logger';
-import { AnswerQuestionRequest, Question, Round, ServerError, ServerTask, User, UserRound } from '../api';
+import { AnswerQuestionRequest, Question, Round, RoundState, ServerError, ServerTask, User, UserRound } from '../api';
 import { error, question as questionEvent, roundUpdate as roundUpdateEvent } from './serverEvents';
 import { getConnectionInstance } from '../connection';
 import { currentRound, refresh } from './round';
@@ -25,13 +25,13 @@ export const saveBank: Effect<{
   questionId: Question['id'],
   sum: number,
   userId: User['id'],
-  roundId: Round['id'],
+  roundId: Round['roundId'],
 }, void> = createEffect('Save to bank');
 export const answerQuestion: Effect<{
   questionId: Question['id'],
   isCorrect: boolean,
   userId: User['id'],
-  roundId: Round['id']
+  roundId: Round['roundId']
 }, void> = createEffect('Answer question');
 
 players.on(roundUpdateEvent, (prev, { users, roundId }) => {
@@ -39,8 +39,8 @@ players.on(roundUpdateEvent, (prev, { users, roundId }) => {
     return users;
   }
 });
-currentPlayer.on(roundUpdateEvent, (prev, { currentUserId, roundId }) => {
-  if (roundId === currentRound.getState()) {
+currentPlayer.on(roundUpdateEvent, (prev, { currentUserId, roundId, roundState }) => {
+  if (roundId === currentRound.getState() && roundState !== RoundState.Ended) {
     return currentUserId;
   }
 });

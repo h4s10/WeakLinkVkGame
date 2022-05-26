@@ -50,10 +50,6 @@ export interface User {
   role: Role,
 }
 
-export interface Round {
-  id: number,
-}
-
 export interface UserRound {
   name: string,
   id: number,
@@ -63,9 +59,16 @@ export interface UserRound {
   isWeak: boolean,
 }
 
-export interface RoundState {
+export enum RoundState {
+  New = 0,
+  Started = 1,
+  Ended = 2
+}
+
+export interface Round {
   sessionId: Session['id'],
-  roundId: Round['id'],
+  roundId: number,
+  roundState: RoundState,
   currentUserId: User['id'],
   users: UserRound[],
 }
@@ -90,7 +93,7 @@ export interface AnswerQuestionRequest {
   questionId?: Question['id'],
   isCorrect: boolean,
   userId: User['id'],
-  roundId: Round['id'],
+  roundId: number,
 }
 
 export enum ServerError {
