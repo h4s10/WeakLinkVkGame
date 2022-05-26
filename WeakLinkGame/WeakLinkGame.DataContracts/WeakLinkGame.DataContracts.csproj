@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\WeakLinkGame.DataAccessLayer\WeakLinkGame.DataAccessLayer.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -52,7 +52,7 @@ public class GameHub : Hub<IGameClient>
         round.CurrentUserId = userRounds.First().UserId;
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
-        await Clients.All.SendRoundState(new SendRoundStateResponse(session.Id, round.Id, (int) round.CurrentUserId,
+        await Clients.All.SendRoundState(new SendRoundStateResponse(session.Id, round.State, round.Id, (int) round.CurrentUserId,
             userRounds.Select(x => new UserRoundDto()
             {
                 BankSum = x.BankSum,
@@ -176,7 +176,11 @@ public class GameHub : Hub<IGameClient>
             return;
         }
         
-        await Clients.All.SendSessionState(session.Rounds.Select(x => x.Id), session.CurrentRoundId);
+        await Clients.All.SendSessionState(session.Rounds.Select(x => new RoundDto()
+        {
+            Id = x.Id,
+            State = x.State
+        }), session.CurrentRoundId);
     }
     
     public async Task GetRoundState(int roundId)
@@ -192,7 +196,7 @@ public class GameHub : Hub<IGameClient>
             return;
         }
         
-        await Clients.All.SendRoundState(new SendRoundStateResponse(round.SessionId, roundId, round.CurrentUserId,
+        await Clients.All.SendRoundState(new SendRoundStateResponse(round.SessionId, round.State, roundId, round.CurrentUserId,
             userRounds.Select(x => new UserRoundDto()
             {
                 BankSum = x.BankSum,
