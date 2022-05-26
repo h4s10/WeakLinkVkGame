@@ -199,8 +199,8 @@ public class GameHub : Hub<IGameClient>
                 Id = x.UserId,
                 IsWeak = x.IsWeak,
                 Name = x.User.Name,
-                PassCount = x.User.Questions?.Count(question => question.State == QuestionState.Passed) ?? 0,
-                RightCount = x.User.Questions?.Count(question => question.State == QuestionState.Answered) ?? 0
+                PassCount = x.WrongScore,
+                RightCount = x.RightScore
             }))
         );
     }
