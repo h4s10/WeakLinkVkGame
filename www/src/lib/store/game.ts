@@ -58,8 +58,8 @@ saveBank.use(({ questionId, sum, userId, roundId }) =>
 
 bank.watch(value => {
   if (value >= MAX_SCORE) {
-    bankFull();
     clearTimer();
+    bankFull();
   }
 });
 
@@ -71,8 +71,8 @@ timerActive.watch((active) => {
 
 error.watch((error) => {
   if (error === ServerError.NO_QUESTIONS) {
-    questionsEnded();
     clearTimer();
+    questionsEnded();
   }
 })
 
