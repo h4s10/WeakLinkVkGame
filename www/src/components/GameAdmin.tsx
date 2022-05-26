@@ -13,8 +13,8 @@ import { TabButton } from './Tabs/TabButton';
 
 import { ReactComponent as ChevronLeft } from '../../assets/chevronLeftOutline.svg';
 import { ReactComponent as CancelIcon } from '../../assets/cancel.svg';
-import { ReactComponent as ChevronLeftIcon } from '../../assets/chevronLeft.svg';
-import { ReactComponent as ChevronRightIcon } from '../../assets/chevronRight.svg';
+import { ReactComponent as ArrowUpOutlineIcon } from '../../assets/arrowUpOutline.svg';
+import { ReactComponent as ArrowDownOutlineIcon } from '../../assets/arrowDownOutline.svg';
 import { USERS_PER_SESSION } from '../lib/settings';
 
 interface Props {
@@ -43,7 +43,7 @@ const getTitle = (state: Screen) => {
     case Screen.UserSelect:
       return '02 Выбор игроков';
   }
-}
+};
 
 const GameAdmin: FunctionComponent<Props> = (
   {
@@ -80,13 +80,17 @@ const GameAdmin: FunctionComponent<Props> = (
   }, [createNewSession, newSessionName, newSessionUsers]);
 
   const addUserToNewSession = useCallback((user: User) => {
-    if (
-      newSessionUsers.length >= USERS_PER_SESSION ||
-      newSessionUsers.find(existing => user.id === existing.id)
-    ) {
+    const userIdx = newSessionUsers.findIndex(existing => user.id === existing.id);
+
+    if (userIdx !== -1) {
+      newSessionUsers.splice(userIdx, 1);
+      setNewSessionUsers([...newSessionUsers]);
       return;
     }
 
+    if (newSessionUsers.length >= USERS_PER_SESSION) {
+      return;
+    }
     setNewSessionUsers([...newSessionUsers, user]);
   }, [newSessionUsers]);
 
@@ -124,7 +128,7 @@ const GameAdmin: FunctionComponent<Props> = (
 
   return <Page>
     <div className="flex gap-5 justify-between items-center">
-      <div className="text-h4 mb-2 flex gap-6 items-center"><a href="/" className="cursor-pointer"><ChevronLeft /></a> {getTitle(adminScreen)}</div>
+      <div className="text-h5 mb-2 flex gap-6 items-center"><a href="/" className="cursor-pointer"><ChevronLeft /></a> {getTitle(adminScreen)}</div>
       {
         canCreate && ['sessions', 'sessionUsers', 'users'].includes(adminScreen) && <Tabs>
           <>
@@ -134,15 +138,17 @@ const GameAdmin: FunctionComponent<Props> = (
         </Tabs>
       }
     </div>
-    <div className="w-full h-max my-auto p-10 min-h-[50%]">
-      {/* Создание игры */}
-      {(!canCreate || adminScreen === 'sessions') && <>
+    {/* Создание игры */}
+    {(!canCreate || adminScreen === 'sessions') && <div className="w-full h-max my-auto min-h-[50%] flex flex-col">
+      <div className="w-full">
         {
-          canCreate && <div className="p-8 bg-white/40 rounded-md shadow border border-white/70 mb-5">
-            <h6 className="text-h6">Новая игра</h6>
+          canCreate && <div className="p-4 bg-white/40 rounded-md shadow border border-white/70 mb-5">
+            <h6 className="text-h7">Новая игра</h6>
             <Input buttonText="Создать" submit={startSessionCreation} />
           </div>
         }
+      </div>
+      <div className="w-full">
         <List<Session>
           header="Игры в процессе"
           items={sessions}
@@ -155,58 +161,69 @@ const GameAdmin: FunctionComponent<Props> = (
             <h4 className="text-h6">Дождитесь когда Ведущий создаст игру.</h4>
           </div>}
         />
-      </>}
+      </div>
+    </div>}
 
-      {/* Наполнение игры */}
-      {canCreate && adminScreen === Screen.UserSelect && <>
-        <div className="flex gap-5 mb-5">
-          <h6 className="text-h6 mb-5">Игроки «{newSessionName}»</h6>
-          <div className="ml-auto" />
-          <Button className="hover:border-incorrect hover:text-incorrect border-none max-w-max px-10 rounded" handler={abortSessionCreation}>Отмена</Button>
-          <Button className="bg-vk-blue max-w-max px-10 rounded" handler={createSession}>Создать игру</Button>
-        </div>
+    {/* Наполнение игры */}
+    {canCreate && adminScreen === Screen.UserSelect && <>
+      <div className="flex gap-5 mb-5">
+        <h6 className="text-h6 mb-5">Игроки «{newSessionName}»</h6>
+        <div className="ml-auto" />
+        <Button className="hover:border-incorrect hover:text-incorrect border-none max-w-max px-10 rounded" handler={abortSessionCreation}>Отмена</Button>
+        <Button className="bg-vk-blue max-w-max px-10 rounded" handler={createSession}>Создать игру</Button>
+      </div>
 
-        <div className="grid grid-cols-3 grid-rows-2 gap-4 mb-5">
-          {newSessionUsers.map((user, idx) => <div key={user.id} className="flex flex-col rounded-md border-2 text-dark shadow justify-between p-8 bg-white/40 border border-white/60 overflow-hidden">
+      <div className="w-full h-max my-auto min-h-[50%] flex flex-row gap-5">
+        <div className="basis-1/2 flex flex-col flex-wrap content-start items-start gap-4 mb-5">
+          {newSessionUsers.map((user, idx) => <div key={user.id}
+                                                   className="flex flex-col w-full rounded-md border-1 text-dark shadow justify-between p-4 bg-white/30 border border-white/60 overflow-hidden">
             <div className="text-h6 2xl:text-h5 text-center relative text-white">
-              <div className="absolute left-0 top-0 text-h3 text-white/60 -z-10 -translate-x-[40%] -translate-y-[50%]">{pad2(idx+1)}</div>
-              <span className="text-stroke">{user.name}</span>
+              <div className="absolute left-0 top-0 text-h3 text-black/50 -z-10 -translate-x-[20%] -translate-y-[40%]">{pad2(idx + 1)}</div>
+              <span className="text-strokfe">{user.name}</span>
             </div>
-            <div className="flex items pt-8">
-              <button className="w-1/3 h-16 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center" onClick={() => moveUserLeft(user)}><ChevronLeftIcon /></button>
-              <button className="w-1/3 h-16 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center" onClick={() => removeUserFromNewSession(user)}><CancelIcon /></button>
-              <button className="w-1/3 h-16 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center" onClick={() => moveUserRight(user)}><ChevronRightIcon /></button>
+            <div className="flex items pt-4">
+              <button className="w-1/3 h-8 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center"
+                      onClick={() => moveUserLeft(user)}><ArrowUpOutlineIcon /></button>
+              <button className="w-1/3 h-8 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center"
+                      onClick={() => removeUserFromNewSession(user)}><CancelIcon /></button>
+              <button className="w-1/3 h-8 text-3xl shadow-none hover:-mt-1 hover:shadow hover:rounded hover:bg-white/60 transition-all flex justify-center items-center"
+                      onClick={() => moveUserRight(user)}><ArrowDownOutlineIcon /></button>
             </div>
           </div>)}
         </div>
-
-        <List<User>
-          header="Все игроки"
-          items={users}
-          selected={newSessionUsers}
-          refresh={refreshUsers}
-          select={addUserToNewSession}
-          itemKey={({ id }) => id}
-          serialize={({ name }) => name}
-        />
-      </>}
-
-      {/* Редактирование игроков */}
-      {canCreate && adminScreen === 'users' && <>
-        <div className="p-8 rounded-md shadow bg-white/40 border border-white mb-5">
-          <h6 className="text-h6">Добавить игрока</h6>
-          <Input buttonText="Добавить" submit={createUser} />
+        <div className="basis-1/2">
+          <List<User>
+            header=""
+            items={users}
+            selected={newSessionUsers}
+            refresh={refreshUsers}
+            select={addUserToNewSession}
+            itemKey={({ id }) => id}
+            serialize={({ name }) => name}
+          />
         </div>
-        <List<User>
-          header="Зарегистрированные игроки"
-          items={users}
-          refresh={refreshUsers}
-          select={() => {}}
-          itemKey={({ id }) => id}
-          serialize={({ name }) => name}
-        />
-      </>}
-    </div>
+      </div>
+    </>}
+
+    {/* Редактирование игроков */}
+    {canCreate && adminScreen === 'users' && <>
+      <div className="w-full h-max my-auto min-h-[50%] flex flex-row flex-nowrap items-start gap-5">
+        <div className="sticky top-10 basis-1/2 p-4 rounded-md shadow bg-white/40 border border-white mb-5">
+          <h6 className="text-h7">Добавить игрока</h6>
+          <Input buttonText="Добавить" layout="col" submit={createUser} />
+        </div>
+        <div className="basis-1/2">
+          <List<User>
+            header="Игроки"
+            items={users}
+            refresh={refreshUsers}
+            select={() => {}}
+            itemKey={({ id }) => id}
+            serialize={({ name }) => name}
+          />
+        </div>
+      </div>
+    </>}
   </Page>;
 };
 

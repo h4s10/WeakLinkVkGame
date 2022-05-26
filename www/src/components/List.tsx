@@ -58,11 +58,11 @@ const List = <T extends any>({ header, items, selected = [], refresh, serialize,
     </div>
     {
       items?.length ? <>
-        <div className="overscroll-y-scroll flex flex-wrap place-content-between gap-5 mt-10">
+        <div className="overscroll-y-scroll flex flex-col flex-wrap items-center gap-5 mt-10 box-content">
           {
             items.filter(item => !filter.length || serialize(item).toLowerCase().includes(filter.toLowerCase())).map(item =>
-              <Button className={cn('px-20 rounded bg-white/70 border border-white w-1/3 hover:bg-white text-black', {
-                '!bg-white border-2 border-vk-blue shadow-lg': selected.includes(item),
+              <Button className={cn('px-20 rounded bg-white/60 border border-white w-max hover:bg-white text-black', {
+                '!bg-white border-4 border-vk-blue shadow-lg': selected.includes(item),
               })} key={itemKey(item)} handler={() => select(item)}>{serialize(item)}</Button>,
             )
           }
