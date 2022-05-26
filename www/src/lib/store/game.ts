@@ -4,7 +4,7 @@ import { error, question as questionEvent, roundUpdate as roundUpdateEvent } fro
 import { getConnectionInstance } from '../connection';
 import { currentRound, refresh } from './round';
 import { MAX_SCORE } from '../settings';
-import { active as timerActive } from './timer';
+import { active as timerActive, clear as clearTimer } from './timer';
 
 export const players = createStore<UserRound[]>([], { name: 'Round users' });
 export const currentPlayer = createStore<User['id']>(null, { name: 'Current user' });
@@ -59,6 +59,7 @@ saveBank.use(({ questionId, sum, userId, roundId }) =>
 bank.watch(value => {
   if (value >= MAX_SCORE) {
     bankFull();
+    clearTimer();
   }
 });
 
@@ -71,6 +72,7 @@ timerActive.watch((active) => {
 error.watch((error) => {
   if (error === ServerError.NO_QUESTIONS) {
     questionsEnded();
+    clearTimer();
   }
 })
 

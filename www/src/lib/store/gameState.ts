@@ -4,6 +4,7 @@ import { authentication } from './auth';
 import { session } from './session';
 import { roundState } from './round';
 import { players } from './game';
+import { WINNERS_PER_SESSION } from '../settings';
 
 export const gameState = createStore<GameState>(GameState.Unauthorized, { name: 'Game state' });
 export const nextState = createEvent<GameState>('Game state advance');
@@ -37,7 +38,7 @@ gameState.on(roundState, (state, newRoundState) => {
 });
 
 gameState.on(players, (state, players) => {
-  if ((state === GameState.Round || state === GameState.ReadyToPlay) && players.length > 0 && players.length <= 2) {
+  if ((state === GameState.Round || state === GameState.ReadyToPlay) && players.length > 0 && players.length <= WINNERS_PER_SESSION) {
     return GameState.Ended;
   }
 });

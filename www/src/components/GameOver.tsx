@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import type { FunctionComponent } from 'react';
 import { GameState, Role } from '../lib/constants';
@@ -9,7 +9,7 @@ import { role as roleStore } from '../lib/store/auth';
 import { refreshState as refreshSession } from '../lib/store/session';
 import { allRounds as allRoundsStore, refresh as refreshRound } from '../lib/store/round';
 import { players as playersStore } from '../lib/store/game';
-import { RoundState } from '../lib/api';
+import { RoundState, UserRound } from '../lib/api';
 import SplashScreen from './SplashScreen';
 
 const GameOver: FunctionComponent = () => {
@@ -35,13 +35,24 @@ const GameOver: FunctionComponent = () => {
       0);
 
     setCumulativeScore(score);
-  }, [allRounds])
+  }, [allRounds]);
+
+  const getUserTotalScore = (userId: UserRound['id']) => {
+    if (cumulativeScore === 0) {
+      return 0;
+    }
+
+    return (Object.values(allRounds) as (RoundState | null)[]).filter(Boolean).reduce(
+      (gameSum, { users }) => gameSum + users.find(({ id }) => id === userId)?.bankSum ?? 0,
+      0
+    );
+  }
 
   return <SplashScreen caption='Игра закончена!'>
     <h1 className="text-9xl">{ cumulativeScore }</h1>
     <ul className="list-decimal mt-10 w-auto">
       { roundPlayers.map((player, i) => <li key={player.id} className="text-h7 font-thin flex place-content-between mx-2">
-        <span><span className="text-muted inline-block min-w-[2rem]">{i + 1}.</span>{player.name}</span> <span>{player.bankSum}</span>
+        <span><span className="text-muted inline-block min-w-[2rem]">{i + 1}.</span>{player.name}</span> <span>{getUserTotalScore(player.id)}</span>
       </li>) }
     </ul>
 

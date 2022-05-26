@@ -7,14 +7,15 @@ import {
   nextRound,
   roundEndReason as roundEndReasonStore,
   roundName as roundNameStore,
-  allRounds as allRoundsStore, refresh,
+  allRounds as allRoundsStore, refresh, endRound,
 } from '../lib/store/round';
-import { bank as bankStore, currentPlayer as currentPlayerStore, players as playersStore, stake as stakeStore } from '../lib/store/game';
+import { bank as bankStore, currentPlayer as currentPlayerStore, players, players as playersStore, stake as stakeStore } from '../lib/store/game';
 import Button from './Button';
 import { PlayersGrid } from './PlayersGrid';
 import { Round, RoundState as ServerRoundState, User } from '../lib/api';
 import { TabButton } from './Tabs/TabButton';
 import { Tabs } from './Tabs/Tabs';
+import { WINNERS_PER_SESSION } from '../lib/settings';
 
 const pluralizeScore = (score) => ({
     one: 'очко',
@@ -53,7 +54,12 @@ const PostRoundAdmin: FunctionComponent = () => {
 
   const onRoundEndClick = useCallback(() => {
     if (weakId) {
-      void nextRound({ roundId: currentRound, weakUserId: weakId });
+      if (currentRoundPlayers.length -1 <= WINNERS_PER_SESSION) {
+        void endRound({ roundId: currentRound, weakUserId: weakId });
+        // void nextRound({ roundId: currentRound, weakUserId: weakId });
+      } else {
+        void nextRound({ roundId: currentRound, weakUserId: weakId });
+      }
     }
   }, [weakId, currentRound, nextRound]);
 
