@@ -128,7 +128,7 @@ const GameAdmin: FunctionComponent<Props> = (
 
   return <Page>
     <div className="flex gap-5 justify-between items-center">
-      <div className="text-h5 mb-2 flex gap-6 items-center"><a href="/" className="cursor-pointer"><ChevronLeft /></a> {getTitle(adminScreen)}</div>
+      <div className="text-h6 mb-2 flex gap-6 items-center"><a href="/" className="cursor-pointer"><ChevronLeft /></a> {getTitle(adminScreen)}</div>
       {
         canCreate && ['sessions', 'sessionUsers', 'users'].includes(adminScreen) && <Tabs>
           <>
@@ -176,8 +176,8 @@ const GameAdmin: FunctionComponent<Props> = (
       <div className="w-full h-max my-auto min-h-[50%] flex flex-row gap-5">
         <div className="basis-1/2 flex flex-col flex-wrap content-start items-start gap-4 mb-5">
           {newSessionUsers.map((user, idx) => <div key={user.id}
-                                                   className="flex flex-col w-full rounded-md border-1 text-dark shadow justify-between p-4 bg-white/30 border border-white/60 overflow-hidden">
-            <div className="text-h6 2xl:text-h5 text-center relative text-white">
+                                                   className="flex flex-col w-full rounded-md border-1 text-dark shadow justify-between p-2 bg-white/30 border border-white/60 overflow-hidden">
+            <div className="text-h7 2xl:text-h6 text-center relative text-white">
               <div className="absolute left-0 top-0 text-h3 text-black/50 -z-10 -translate-x-[20%] -translate-y-[40%]">{pad2(idx + 1)}</div>
               <span className="text-strokfe">{user.name}</span>
             </div>
