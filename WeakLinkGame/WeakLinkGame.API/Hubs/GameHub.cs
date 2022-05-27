@@ -87,6 +87,19 @@ public class GameHub : Hub<IGameClient>
 
         userRound.IsWeak = true;
         _context.UserRounds.Update(userRound);
+        var usersLeft = await _context.UserRounds.Include(x => x.User).Where(x => x.RoundId == roundId && !x.IsWeak).Select(x => x.User)
+            .ToListAsync();
+        if (usersLeft.Count <= 2)
+        {
+            var session = await _context
+                .Sessions.Where(x => x.Id == round.SessionId)
+                .Include(x => x.Rounds)
+                .ThenInclude(x => x.UserRounds)
+                .FirstOrDefaultAsync();
+            var bankSum = session.Rounds.SelectMany(x => x.UserRounds).Sum(x => x.BankSum);
+            usersLeft.ForEach(x => x.Score = bankSum);
+        }
+        _context.Users.UpdateRange(usersLeft);
         await _context.SaveChangesAsync();
         await GetSessionState(round.SessionId);
     }
@@ -205,7 +218,8 @@ public class GameHub : Hub<IGameClient>
                 IsWeak = x.IsWeak,
                 Name = x.User.Name,
                 PassCount = x.WrongScore,
-                RightCount = x.RightScore
+                RightCount = x.RightScore,
+                Score = x.User.Score,
             }))
         );
     }
@@ -279,7 +293,8 @@ public class GameHub : Hub<IGameClient>
             IsCorrect = x.IsCorrect,
             Text = x.Text,
         });
-        await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, 
+        await Clients.Group(UserGroup.Admin).SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, answers));
+        await Clients.Group(UserGroup.Player).SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, 
             answers.Count() > 1 ? answers : new List<AnswerDto>()));
     }
 
