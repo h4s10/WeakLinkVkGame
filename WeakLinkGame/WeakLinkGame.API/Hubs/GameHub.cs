@@ -269,6 +269,9 @@ public class GameHub : Hub<IGameClient>
             return;
         }
 
+        question.State = QuestionState.NotAnswered;
+        _context.Questions.Update(question);
+        await _context.SaveChangesAsync();
         await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, question.Answers!.Select(x => new AnswerDto()
         {
             Id = x.Id,
