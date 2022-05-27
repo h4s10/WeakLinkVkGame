@@ -171,11 +171,12 @@ public class GameHub : Hub<IGameClient>
             question.State = QuestionState.Passed;
         }
 
+        round.CurrentUserId = userRounds.GetNext(userRound).UserId;
         _context.Questions.Update(question);
         _context.UserRounds.Update(userRound);
         _context.Rounds.Update(round);
         await _context.SaveChangesAsync();
-        await GetQuestion(userRounds.GetNext(userRound).UserId, round.RightAnswerChainCount);
+        await GetQuestion((int) round.CurrentUserId, round.RightAnswerChainCount);
     }
 
     public async Task GetSessionState(int idSession)
