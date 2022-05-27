@@ -91,9 +91,7 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
             </Button>
         ))}
       </div> :
-        (answers[0]?.text ?? null) && <div className={cn('text-h5 py-2 px-8 rounded-lg border-4 shadow-md', {
-          'border-correct': role === Role.Admin,
-        })}>
+        (role === Role.Admin && answers[0]?.text) && <div className='text-h5 py-2 px-8 rounded-lg border-4 shadow-md border-correct'>
           <ReactMarkdown>{answers[0].text}</ReactMarkdown>
         </div>
       }

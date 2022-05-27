@@ -45,6 +45,10 @@ const Game: FunctionComponent = () => {
     }
   }, [question, stake, player, currentRound]);
 
+  if (!question) {
+    return null;
+  }
+
   return <Page>
     <div className="Game grid grid-rows-5 grid-cols-7 content-between gap-2 h-full relative">
       <div className="row-span-4 col-span-1 relative">
