@@ -4,5 +4,6 @@ public enum QuestionState : byte
 {
     New = 0,
     Answered,
-    Passed
+    Passed,
+    NotAnswered
 }
