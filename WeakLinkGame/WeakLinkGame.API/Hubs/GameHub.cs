@@ -87,6 +87,7 @@ public class GameHub : Hub<IGameClient>
 
         userRound.IsWeak = true;
         _context.UserRounds.Update(userRound);
+        await _context.SaveChangesAsync();
         var usersLeft = await _context.UserRounds.Include(x => x.User).Where(x => x.RoundId == roundId && !x.IsWeak).Select(x => x.User)
             .ToListAsync();
         if (usersLeft.Count <= 2)
