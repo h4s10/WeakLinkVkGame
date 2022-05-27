@@ -87,10 +87,16 @@ const QuestionCard: FC<Props> = ({ player, question, role, onVerdict, onClose })
             <Button className={cn('text-h7 2xl:text-h6 p-2 px-6 flex-1 bg-muted text-vk-blue rounded-md relative text-center', {
               'shadow shadow-correct border border-correct': role === Role.Admin && answer.isCorrect,
             })} ignoreInnerStyle={true} key={answer.id} handler={() => {}}>
-              <ReactMarkdown>{answer.text}</ReactMarkdown>
+              { (answer.text ?? null) && <ReactMarkdown>{answer.text}</ReactMarkdown> }
             </Button>
         ))}
-      </div> : <div className="text-h5 py-2 px-8 rounded-lg border-4 border-correct shadow-md"><ReactMarkdown>{answers[0].text}</ReactMarkdown></div>}
+      </div> :
+        (answers[0]?.text ?? null) && <div className={cn('text-h5 py-2 px-8 rounded-lg border-4 shadow-md', {
+          'border-correct': role === Role.Admin,
+        })}>
+          <ReactMarkdown>{answers[0].text}</ReactMarkdown>
+        </div>
+      }
       {role === Role.Admin ? <div className="flex gap-4">
         <div className="basis-1/2 flex-1 flex">
           <Button className={cn('basis-1/2 flex-none bg-neutral text-white rounded-lg border-4 border-white shadow-md hover:shadow-lg', {
