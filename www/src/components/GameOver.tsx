@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import type { FunctionComponent } from 'react';
 import { GameState, Role } from '../lib/constants';
@@ -56,7 +56,7 @@ const GameOver: FunctionComponent = () => {
         .map(player => ({ player, score: getUserTotalScore(player.id) }))
         .sort((a, b) => b.score - a.score)
         .map(({ player, score }, i) =>
-          <li key={player.id} className="text-h7 font-thin flex place-content-between mx-2">
+          <li key={player.id} className="text-h7 2xl:text-h4 font-thin flex place-content-between mx-2">
             <span><span className="text-muted inline-block min-w-[2rem]">{i + 1}.</span>{player.name}</span> <span>{score}</span>
           </li>
         )
