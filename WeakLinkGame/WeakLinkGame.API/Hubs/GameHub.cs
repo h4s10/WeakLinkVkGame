@@ -107,6 +107,12 @@ public class GameHub : Hub<IGameClient>
         }
 
         var round = await _context.Rounds.FindAsync(request.RoundId);
+        var question = await _context.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == request.QuestionId);
+        if (question is null)
+        {
+            _logger.LogError("Question {QuestionId} not found", request.QuestionId);
+            return;
+        }
         //Кладем в банк
         if (request.IsBank)
         {
@@ -118,6 +124,8 @@ public class GameHub : Hub<IGameClient>
 
             userRound.BankSum += (int) request.BankSum;
             round.RightAnswerChainCount = 0;
+            question.State = QuestionState.New;
+            _context.Questions.Update(question);
             _context.UserRounds.Update(userRound);
             _context.Rounds.Update(round);
             await _context.SaveChangesAsync();
@@ -127,13 +135,6 @@ public class GameHub : Hub<IGameClient>
 
         //Отвечаем на вопрос
         var userRounds = await _context.UserRounds.Where(x => x.RoundId == request.RoundId).ToListAsync();
-        var question = await _context.Questions.Include(x => x.Answers).FirstOrDefaultAsync(x => x.Id == request.QuestionId);
-        if (question is null)
-        {
-            _logger.LogError("Question {QuestionId} not found", request.QuestionId);
-            return;
-        }
-
         question.UserId = request.UserId;
         if (!request.IsPass)
         {
@@ -272,12 +273,14 @@ public class GameHub : Hub<IGameClient>
         question.State = QuestionState.NotAnswered;
         _context.Questions.Update(question);
         await _context.SaveChangesAsync();
-        await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, question.Answers!.Select(x => new AnswerDto()
+        var answers = question.Answers!.Select(x => new AnswerDto()
         {
             Id = x.Id,
             IsCorrect = x.IsCorrect,
             Text = x.Text,
-        })));
+        });
+        await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, 
+            answers.Count() > 1 ? answers : new List<AnswerDto>()));
     }
 
     public async Task ChangeCurrentUser(int userId, int roundId)
