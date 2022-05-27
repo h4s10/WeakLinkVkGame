@@ -7,7 +7,7 @@ import { nextState } from '../lib/store/gameState';
 import { useStore } from 'effector-react';
 import { role as roleStore } from '../lib/store/auth';
 import { refreshState as refreshSession } from '../lib/store/session';
-import { allRounds as allRoundsStore, refresh as refreshRound } from '../lib/store/round';
+import { allRounds as allRoundsStore, refresh as refreshRound, currentRound as currentRoundStore } from '../lib/store/round';
 import { players as playersStore } from '../lib/store/game';
 import { Round, UserRound } from '../lib/api';
 import SplashScreen from './SplashScreen';
@@ -16,6 +16,7 @@ const GameOver: FunctionComponent = () => {
   const role = useStore(roleStore);
   const roundPlayers = useStore(playersStore);
   const allRounds = useStore(allRoundsStore);
+  const currentRound = useStore(currentRoundStore);
 
   const [cumulativeScore, setCumulativeScore] = useState(0);
 
@@ -37,23 +38,15 @@ const GameOver: FunctionComponent = () => {
     setCumulativeScore(score);
   }, [allRounds]);
 
-  const getUserTotalScore = (userId: UserRound['id']) => {
-    if (cumulativeScore === 0) {
-      return 0;
-    }
-
-    return (Object.values(allRounds) as (Round | null)[]).filter(Boolean).reduce(
-      (gameSum, { users }) => gameSum + users.find(({ id }) => id === userId)?.bankSum ?? 0,
-      0
-    );
-  }
+  const getUserScore = (userId: UserRound['id']) =>
+    allRounds[currentRound]?.users?.find(({ id }) => id == userId)?.score ?? 0;
 
   return <SplashScreen caption='Игра закончена!'>
     <h1 className="text-9xl">{ cumulativeScore }</h1>
     <ul className="list-decimal mt-10 w-auto">
       { roundPlayers
         .filter( ({ isWeak }) => !isWeak )
-        .map(player => ({ player, score: getUserTotalScore(player.id) }))
+        .map(player => ({ player, score: getUserScore(player.id) }))
         .sort((a, b) => b.score - a.score)
         .map(({ player, score }, i) =>
           <li key={player.id} className="text-h7 2xl:text-h4 font-thin flex place-content-between mx-2">

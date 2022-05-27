@@ -57,6 +57,7 @@ export interface UserRound {
   rightCount: number,
   bankSum: number,
   isWeak: boolean,
+  score: number,
 }
 
 export enum RoundState {
