@@ -293,9 +293,7 @@ public class GameHub : Hub<IGameClient>
             IsCorrect = x.IsCorrect,
             Text = x.Text,
         });
-        await Clients.Group(UserGroup.Admin).SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, answers));
-        await Clients.Group(UserGroup.Player).SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, 
-            answers.Count() > 1 ? answers : new List<AnswerDto>()));
+        await Clients.All.SendQuestion(new QuestionResponse(question.Id, question.Text, currentUserId, rightAnswersCount, answers));
     }
 
     public async Task ChangeCurrentUser(int userId, int roundId)
