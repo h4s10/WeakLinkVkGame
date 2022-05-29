@@ -58,7 +58,7 @@ public class QuestionsController : ControllerBase
     public async Task<IActionResult> Count()
     {
         var questions = await _context.Questions.ToListAsync();
-        if (questions.Any())
+        if (!questions.Any())
             return Ok();
         
         return Ok(new
