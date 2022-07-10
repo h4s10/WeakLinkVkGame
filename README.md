@@ -16,3 +16,4 @@ WeakLink game, based on signalR
 - База данных хранится в папке ./db
 - Вопросы хранятся в ./WeakLinkGame/WeakLinkGame.API/questions.txt
 - Настройки бэкенда лежат в ./WeakLinkGame/WeakLinkGame.API/appsettings.json
+- длительности раундов и количества игроков хранятся в ./WeakLinkGame/www/src/lib/settings.ts
