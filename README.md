@@ -17,6 +17,8 @@ WeakLink game, based on signalR
 
 После этого нужно открыть [http://localhost](http://localhost)
 
+Чтобы остановить запущенный проект, нажмите command + C
+
 
 ## Примечания
 - База данных хранится в папке ./db
