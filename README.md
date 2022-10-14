@@ -2,15 +2,21 @@
 
 WeakLink game, based on signalR
 
-
-## Запуск
-Запуск можно сделать одной командой:
-
-    docker-compose up
+## Подготовка
 
 Если были какие-то изменения, то нужно сделать билд образов командой:
 
-    docker-compose build
+```    docker-compose build```
+
+
+## Запуск
+
+Запуск можно сделать одной командой:
+
+```    docker-compose up```
+
+После этого нужно открыть [http://localhost](http://localhost)
+
 
 ## Примечания
 - База данных хранится в папке ./db
