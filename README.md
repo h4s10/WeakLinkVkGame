@@ -17,7 +17,7 @@ WeakLink game, based on signalR
 
 После этого нужно открыть [http://localhost](http://localhost)
 
-Чтобы остановить запущенный проект, нажмите command + C
+Чтобы остановить запущенный проект, нажмите control + C
 
 
 ## Примечания
